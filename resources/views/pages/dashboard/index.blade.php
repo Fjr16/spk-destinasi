@@ -7,13 +7,12 @@
           <div class="d-flex align-items-end row">
             <div class="col-sm-7">
               <div class="card-body">
-                <h5 class="card-title text-primary">Selamat Datang Admin! 🎉</h5>
+                <h5 class="card-title text-warning">Selamat Datang Admin! 🎉</h5>
                 <p class="mb-4">
                   Profesional, Berintegritas, Responsif, dan Fokus Pada Keselamatan Pasien.
                 </p>
 
                 <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
-                <a href="javascript:;" class="btn btn-sm btn-primary">View Badges</a>
               </div>
             </div>
             <div class="col-sm-5 text-center text-sm-left">

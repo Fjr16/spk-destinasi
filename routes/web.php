@@ -22,3 +22,8 @@ Route::get('/', function () {
         "menu" => "Dashboard",
     ]);
 });
+Route::get('/login', function () {
+    return view('layouts.guest.login', [
+        "title" => "Login",
+    ]);
+});
