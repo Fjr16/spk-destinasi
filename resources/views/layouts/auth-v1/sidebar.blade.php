@@ -24,40 +24,25 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-        <li class="menu-item {{ $title === 'Dashbo' ? 'active' : '' }}">
-            <a href="/" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
 
         {{-- <li class="menu-header small text-uppercase">
             <span class="menu-header-text text-white">Master</span>
         </li> --}}
-        <li class="menu-item {{ $menu == 'Setting' ? 'open' : '' }}">
+        <li class="menu-item {{ $menu == 'data' ? 'open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bxs-cog"></i>
-                <div>Master</div>
+                {{-- <i class="menu-icon tf-icons bx bxs-cog"></i> --}}
+                <i class='menu-icon tf-icons bx bx-box'></i>
+                <div>Data</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ $title == 'Kategori Pasien' ? 'active' : '' }}">
-                    <a href="" class="menu-link">
-                        <div>Menu 1</div>
+                <li class="menu-item {{ $title == 'alternative' ? 'active' : '' }}">
+                    <a href="{{ route('spk/destinasi/alternative.index') }}" class="menu-link">
+                        <div>Alternatif Wisata (A)</div>
                     </a>
                 </li>
-                <li class="menu-item {{ $title == 'Pekerjaan' ? 'active' : '' }}">
-                    <a href="" class="menu-link">
-                        <div>Menu 2</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $title == 'Unit' ? 'active' : '' }}">
-                    <a href="" class="menu-link">
-                        <div>Menu 3</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $title == 'Specialist' ? 'active' : '' }}">
-                    <a href="" class="menu-link">
-                        <div>Menu 4</div>
+                <li class="menu-item {{ $title == 'kriteria' ? 'active' : '' }}">
+                    <a href="{{ route('spk/destinasi/kriteria.index') }}" class="menu-link">
+                        <div>Kriteria (C)</div>
                     </a>
                 </li>
             </ul>

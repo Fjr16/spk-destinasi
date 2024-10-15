@@ -110,16 +110,16 @@
 
     <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
         <div class="layout-container">
             <!-- Menu -->
-            @include('layouts.auth-v1.sidebar')
+            {{-- @include('layouts.auth-v2.sidebar') --}}
             <!-- / Menu -->
 
             <!-- Layout container -->
             <div class="layout-page">
                 <!-- Navbar -->
-                @include('layouts.auth-v1.navbar')
+                @include('layouts.auth-v2.navbar')
                 <!-- / Navbar -->
 
                 <!-- Content wrapper -->
@@ -144,7 +144,7 @@
 
 
                     <!-- Footer -->
-                    @include('layouts.auth-v1.footer')
+                    @include('layouts.auth-v2.footer')
                     <!-- / Footer -->
 
                     <div class="content-backdrop fade"></div>
@@ -191,6 +191,15 @@
     <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
     <script>
         $('#datatable').DataTable();
+    </script>
+
+    <script>
+        const menu2 = document.querySelector('#menu-2');
+            if (menu2) {
+            new Menu(menu2, {
+                orientation: 'horizontal'
+            });
+        }
     </script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
