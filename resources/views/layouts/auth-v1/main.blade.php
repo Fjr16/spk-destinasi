@@ -255,6 +255,21 @@
         }
     </script>
 
+    {{-- modal konfirmasi delete dinamis --}}
+    <script>
+        function showModalDelete(element) {
+            const url = $(element).data('url');
+            console.log(url);
+
+            const modal = $('#modalDelete');
+
+            const formDelete = modal.find('form');
+            formDelete.attr('action', url);
+            
+            modal.modal('show');
+        }
+    </script>
+
     @yield('script')
 
 </body>

@@ -41,9 +41,10 @@ Route::get('/home', function () {
 Route::get('spk/destinasi/alternative/wisata', [AlternativeController::class, 'index'])->name('spk/destinasi/alternative.index');
 Route::get('spk/destinasi/alternative/wisata/create', [AlternativeController::class, 'create'])->name('spk/destinasi/alternative.create');
 Route::post('spk/destinasi/alternative/wisata/store', [AlternativeController::class, 'store'])->name('spk/destinasi/alternative.store');
+Route::get('spk/destinasi/alternative/wisata/show/{id}', [AlternativeController::class, 'show'])->name('spk/destinasi/alternative.show');
 Route::get('spk/destinasi/alternative/wisata/edit/{id}', [AlternativeController::class, 'edit'])->name('spk/destinasi/alternative.edit');
-Route::put('spk/destinasi/alternative/wisata/update', [AlternativeController::class, 'update'])->name('spk/destinasi/alternative.update');
-Route::delete('spk/destinasi/alternative/wisata/destroy', [AlternativeController::class, 'destroy'])->name('spk/destinasi/alternative.destroy');
+Route::put('spk/destinasi/alternative/wisata/update/{id}', [AlternativeController::class, 'update'])->name('spk/destinasi/alternative.update');
+Route::delete('spk/destinasi/alternative/wisata/destroy/{id}', [AlternativeController::class, 'destroy'])->name('spk/destinasi/alternative.destroy');
 
 // Criteria
 Route::get('spk/destinasi/kriteria/wisata', [CriteriaController::class, 'index'])->name('spk/destinasi/kriteria.index');
@@ -51,4 +52,4 @@ Route::get('spk/destinasi/kriteria/wisata/create', [CriteriaController::class, '
 Route::post('spk/destinasi/kriteria/wisata/store', [CriteriaController::class, 'store'])->name('spk/destinasi/kriteria.store');
 Route::get('spk/destinasi/kriteria/wisata/edit/{id}', [CriteriaController::class, 'edit'])->name('spk/destinasi/kriteria.edit');
 Route::put('spk/destinasi/kriteria/wisata/update/{id}', [CriteriaController::class, 'update'])->name('spk/destinasi/kriteria.update');
-Route::delete('spk/destinasi/kriteria/wisata/destroy', [CriteriaController::class, 'destroy'])->name('spk/destinasi/kriteria.destroy');
+Route::delete('spk/destinasi/kriteria/wisata/destroy/{id}', [CriteriaController::class, 'destroy'])->name('spk/destinasi/kriteria.destroy');

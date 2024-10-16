@@ -26,10 +26,10 @@
                                 <td>{{ $item->name ?? '-' }}</td>
                                 <td>{{ $item->tipe ?? '-' }}</td>
                                 <td class="d-flex">
-                                    <a href="{{ route('spk/destinasi/kriteria.edit', encrypt($item->id)) }}" class="btn btn-sm btn-warning me-2"><i class="bx bx-edit"></i></a>
-                                    <form action="{{ route('spk/destinasi/kriteria.destroy', encrypt($item->id)) }}">
-                                        <button class="btn btn-sm btn-danger" type="submit"><i class="bx bx-trash"></i></button>
-                                    </form>
+                                    <a href="{{ route('spk/destinasi/kriteria.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning me-2"><i class="bx bx-edit"></i></a>
+                                    <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/kriteria.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
+                                        <i class="bx bx-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -38,4 +38,8 @@
             </div>
         </div>
     </div>
+
+    <x-modal-confirm-delete>
+        Apakah anda yakin ingin menghapus data kriteria ini ?
+    </x-modal-confirm-delete>
 @endsection

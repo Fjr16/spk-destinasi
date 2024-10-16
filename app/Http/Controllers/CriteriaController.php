@@ -80,7 +80,7 @@ class CriteriaController extends Controller
      */
     public function destroy(string $id)
     {
-        $item = Criteria::find($id);
+        $item = Criteria::find(decrypt($id));
         $item->delete();
 
         return back()->with('success', 'Berhasil Dihapus');
