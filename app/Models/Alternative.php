@@ -11,14 +11,18 @@ class Alternative extends Model
 
     protected $fillable = [
         'name',
+        'travel_category_id',
         'deskripsi',
         'alamat',
         'harga',
         'maps_lokasi',
         'foto',
-        'kategori',
         'rating',
         'jumlah_fasilitas',
         'status',
     ];
+
+    public function travelCategory(){
+        return $this->belongsTo(TravelCategory::class);
+    }
 }

@@ -33,7 +33,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="kategori-wisata" class="form-label">Kategori</label>
-                        <input type="text" class="form-control form-control-md" id="kategori-wisata" name="kategori" placeholder="kategori" value="{{ old('kategori', $item->kategori ?? '') }}" required />
+                        <select class="form-select form-control" id="kategori-wisata" aria-label="Default select example" name="travel_category_id" required>
+                          <option selected disabled>-- Pilih Kategori --</option>
+                          @foreach ($data as $cat)
+                            <option value="{{ $cat->id }}" {{ old('travel_category_id', $item->travel_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name ?? '-' }}</option>
+                          @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="jumlah-fasilitas" class="form-label">Jumlah Fasilitas</label>

@@ -39,7 +39,7 @@
                                 <td>{{ $item->alamat ?? '-' }}</td>
                                 <td>{{ $item->harga ?? '-' }}</td>
                                 <td>{{ $item->maps_lokasi ?? '-' }}</td>
-                                <td>{{ $item->kategori ?? '-' }}</td>
+                                <td>{{ $item->travelCategory->name ?? '-' }}</td>
                                 {{-- <td>{{ $item->rating ?? '-' }}</td> --}}
                                 {{-- <td>{{ $item->jumlah_fasilitas ?? '-' }}</td> --}}
                                 <td>{{ $item->status ?? '-' }}</td>

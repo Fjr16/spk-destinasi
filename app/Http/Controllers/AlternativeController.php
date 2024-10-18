@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alternative;
+use App\Models\TravelCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,9 +27,11 @@ class AlternativeController extends Controller
      */
     public function create()
     {
+        $data = TravelCategory::all();
         return view('pages.alternative.create', [
             'title' => 'alternative',
             'menu' => 'data',
+            'data' => $data,
         ]);
     }
 
@@ -66,11 +69,13 @@ class AlternativeController extends Controller
      */
     public function edit(string $id)
     {
+        $data = TravelCategory::all();
         $item = Alternative::find(decrypt($id));
         return view('pages.alternative.edit', [
             'title' => 'alternative',
             'menu' => 'data',
             'item' => $item,
+            'data' => $data,
         ]);
     }
 
@@ -80,7 +85,7 @@ class AlternativeController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
         $item = Alternative::find(decrypt($id));

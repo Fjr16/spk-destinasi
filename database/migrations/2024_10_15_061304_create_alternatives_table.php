@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('alternatives', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100)->nullable();
+            $table->foreignId('travel_category_id')->required();
             $table->text('deskripsi')->nullable();
             $table->text('alamat')->nullable();
             $table->decimal('harga', 10,2)->required();
             $table->string('maps_lokasi')->required();
             $table->string('foto')->nullable();
-            $table->string('kategori')->nullable();
             $table->integer('rating')->default(0);
             $table->integer('jumlah_fasilitas')->default(0);
             $table->enum('status', ['accepted', 'denied', 'waiting'])->default('waiting');

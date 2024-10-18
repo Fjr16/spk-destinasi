@@ -4,6 +4,7 @@ use App\Http\Controllers\AlternativeController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\CustumerController;
 use App\Http\Controllers\SubCriteriaController;
+use App\Http\Controllers\TravelCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,14 @@ Route::get('spk/destinasi/alternative/wisata/show/{id}', [AlternativeController:
 Route::get('spk/destinasi/alternative/wisata/edit/{id}', [AlternativeController::class, 'edit'])->name('spk/destinasi/alternative.edit');
 Route::put('spk/destinasi/alternative/wisata/update/{id}', [AlternativeController::class, 'update'])->name('spk/destinasi/alternative.update');
 Route::delete('spk/destinasi/alternative/wisata/destroy/{id}', [AlternativeController::class, 'destroy'])->name('spk/destinasi/alternative.destroy');
+
+// Kategori Wisata
+Route::get('spk/destinasi/kategori/wisata/index', [TravelCategoryController::class, 'index'])->name('spk/destinasi/kategori/wisata.index');
+Route::get('spk/destinasi/kategori/wisata/create', [TravelCategoryController::class, 'create'])->name('spk/destinasi/kategori/wisata.create');
+Route::post('spk/destinasi/kategori/wisata/store', [TravelCategoryController::class, 'store'])->name('spk/destinasi/kategori/wisata.store');
+Route::get('spk/destinasi/kategori/wisata/edit/{id}', [TravelCategoryController::class, 'edit'])->name('spk/destinasi/kategori/wisata.edit');
+Route::put('spk/destinasi/kategori/wisata/update/{id}', [TravelCategoryController::class, 'update'])->name('spk/destinasi/kategori/wisata.update');
+Route::delete('spk/destinasi/kategori/wisata/destroy/{id}', [TravelCategoryController::class, 'destroy'])->name('spk/destinasi/kategori/wisata.destroy');
 
 // Criteria
 Route::get('spk/destinasi/kriteria/wisata', [CriteriaController::class, 'index'])->name('spk/destinasi/kriteria.index');

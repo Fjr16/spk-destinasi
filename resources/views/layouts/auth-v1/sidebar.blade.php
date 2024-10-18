@@ -47,6 +47,12 @@
                 </li>
             </ul>
         </li>
+        <li class="menu-item {{ $title === 'Kategori Wisata' ? 'active' : '' }}">
+            <a href="{{ route('spk/destinasi/kategori/wisata.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-category"></i>
+                <div>Kategori Wisata</div>
+            </a>
+        </li>
         
     </ul>
 </aside>
