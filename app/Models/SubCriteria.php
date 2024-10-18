@@ -5,20 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Criteria extends Model
+class SubCriteria extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'kode',
+        'criteria_id',
         'name',
-        'tipe',
         'bobot',
-        'atribut',
-        'is_include',
     ];
 
-    public function subCriterias(){
-        return $this->hasMany(SubCriteria::class);
+    public function criteria() {
+        return $this->belongsTo(Criteria::class);        
     }
 }

@@ -13,11 +13,15 @@
                 <div class="col-md-12">
                     <div class="mb-3">
                         <label koder="nama-kriteria" class="form-label">Kode Kriteria</label>
-                        <input type="text" class="form-control form-control-md" id="kode-kriteria" name="kode" placeholder="Kode" value="{{ old('kode', $item->kode ?? '') }}" required />
+                        <input type="text" class="form-control form-control-md" id="kode-kriteria" name="kode" placeholder="Kode" value="{{ old('kode', $item->kode ?? '') }}" {{ $item->atribut == 'konstanta' ? 'disabled' : '' }}/>
                     </div>
                     <div class="mb-3">
                         <label for="nama-kriteria" class="form-label">Nama Kriteria</label>
-                        <input type="text" class="form-control form-control-md" id="nama-kriteria" name="name" placeholder="Nama" value="{{ old('name', $item->name ?? '') }}" required />
+                        <input type="text" class="form-control form-control-md" id="nama-kriteria" name="name" placeholder="Nama" value="{{ old('name', $item->name ?? '') }}" {{ $item->atribut == 'konstanta' ? 'disabled' : '' }} />
+                    </div>
+                    <div class="mb-3">
+                        <label for="bobot-kriteria" class="form-label">Bobot (Nilai)</label>
+                        <input type="number" class="form-control form-control-md" id="bobot-kriteria" name="bobot" placeholder="Bobot" value="{{ old('bobot', $item->bobot ?? 0) }}" required />
                     </div>
                     <div class="mb-3">
                         <label for="tipe-kriteria" class="form-label">Tipe Kriteria</label>

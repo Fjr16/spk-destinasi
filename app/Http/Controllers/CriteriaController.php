@@ -13,10 +13,12 @@ class CriteriaController extends Controller
     public function index()
     {
         $data = Criteria::all();
+        $totalBobot = $data->where('is_include', true)->sum('bobot');
         return view('pages.kriteria.index', [
             'title' => 'kriteria',
             'menu' => 'data',
             'data' => $data,
+            'totalBobot' => $totalBobot,
         ]);
     }
 
@@ -70,6 +72,13 @@ class CriteriaController extends Controller
     {
         $item = Criteria::find(decrypt($id));
         $data = $request->all();
+        if ($item->atribut == 'konstanta') {
+            $data = [
+                'tipe' => $request->tipe ?? '',
+                'bobot' => $request->bobot ?? 0,
+            ];
+        }
+
         $item->update($data);
 
         return redirect()->route('spk/destinasi/kriteria.index')->with('success', 'Berhasil Diperbarui');
@@ -84,5 +93,23 @@ class CriteriaController extends Controller
         $item->delete();
 
         return back()->with('success', 'Berhasil Dihapus');
+    }
+
+    public function activated(Request $request, string $id)
+    {
+        $item = Criteria::find(decrypt($id));
+        if ($item->atribut == 'konstanta') {
+            if ($item->is_include == true) {
+                $item->update([
+                    'is_include' => false,
+                ]);
+            }else{
+                $item->update([
+                    'is_include' => true,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Berhasil Diperbarui');
     }
 }

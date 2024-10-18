@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,5 +19,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        if (!DB::table('criterias')->where('name', 'Jarak Tempuh')->exists()) {
+            DB::table('criterias')->insert([
+                'kode' => 'C1',
+                'name' => 'Jarak Tempuh',
+                'tipe' => 'cost',
+                'bobot' => 20,
+                'atribut' => 'konstanta',
+                'is_include' => true,
+            ]);
+        }
     }
 }

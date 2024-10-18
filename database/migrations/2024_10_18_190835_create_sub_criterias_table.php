@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('criterias', function (Blueprint $table) {
+        Schema::create('sub_criterias', function (Blueprint $table) {
             $table->id();
-            $table->string('kode', 50)->nullable();
+            $table->foreignId('criteria_id')->required();
             $table->string('name', 100)->required();
-            $table->enum('tipe',['cost', 'benefit'])->required();
             $table->float('bobot')->default(0)->required();
-            $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
-            $table->boolean('is_include')->default(true);
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('criterias');
+        Schema::dropIfExists('sub_criterias');
     }
 };
