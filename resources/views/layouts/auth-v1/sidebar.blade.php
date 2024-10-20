@@ -45,6 +45,11 @@
                         <div>Kriteria (C)</div>
                     </a>
                 </li>
+                <li class="menu-item {{ $title == 'penilaian' ? 'active' : '' }}">
+                    <a href="{{ route('spk/destinasi/penilaian.index') }}" class="menu-link">
+                        <div>Penilaian (R)</div>
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="menu-item {{ $title === 'Kategori Wisata' ? 'active' : '' }}">

@@ -137,6 +137,24 @@
                                 </div>
                             </div>
                             @endif
+                            @if (session()->has('errors'))
+                            <div class="alert alert-danger d-flex mb-4" role="alert">
+                                <span class="alert-icon rounded-circle"><i class='bx bxs-badge-x'></i></span>
+                                <div class="d-flex flex-column ps-1">
+                                <h6 class="alert-heading d-flex align-items-center fw-bold mb-1">Transaction Errors !!</h6>
+                                <span>{{ session('errors') }} !</span>
+                                </div>
+                            </div>
+                            @endif
+                            @if (session()->has('error'))
+                            <div class="alert alert-danger d-flex mb-4" role="alert">
+                                <span class="alert-icon rounded-circle"><i class='bx bxs-badge-x'></i></span>
+                                <div class="d-flex flex-column ps-1">
+                                <h6 class="alert-heading d-flex align-items-center fw-bold mb-1">Transaction Errors !!</h6>
+                                <span>{{ session('error') }} !</span>
+                                </div>
+                            </div>
+                            @endif
                             {{-- end alert --}}
                         @yield('content')
                     </div>

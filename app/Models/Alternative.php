@@ -25,4 +25,7 @@ class Alternative extends Model
     public function travelCategory(){
         return $this->belongsTo(TravelCategory::class);
     }
+    public function performanceRatings(){
+        return $this->hasMany(PerformanceRating::class);
+    }
 }

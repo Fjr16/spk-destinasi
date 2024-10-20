@@ -21,4 +21,7 @@ class Criteria extends Model
     public function subCriterias(){
         return $this->hasMany(SubCriteria::class);
     }
+    public function performanceRatings(){
+        return $this->hasMany(PerformanceRating::class);
+    }
 }
