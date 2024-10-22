@@ -77,13 +77,14 @@ Route::delete('spk/destinasi/penilaian/wisata/destroy/{id}', [PerformanceRatingC
 
 
 // layout 2 (Customer page)
-Route::get('/home', function () {
-    return view('pages.custumer-page.home.index', [
-        "title" => "Home",
-        "menu" => "Home",
-    ]);
-});
+// Route::get('/home', function () {
+//     return view('pages.custumer-page.home.index', [
+//         "title" => "Home",
+//         "menu" => "Home",
+//     ]);
+// });
 
-Route::get('spk/destinasi/list/wisata', [CustumerController::class, 'wisataIndex'])->name('spk/destinasi/list.wisata');
+Route::get('spk/destinasi/home', [CustumerController::class, 'wisataIndex'])->name('spk/destinasi/home.index');
+Route::get('spk/destinasi/wisata/detail/{id}', [CustumerController::class, 'wisataShow'])->name('spk/destinasi/wisata.show');
 Route::get('spk/destinasi/rekomendasi/create', [CustumerController::class, 'rekomendasiCreate'])->name('spk/destinasi/rekomendasi.create');
 Route::post('spk/destinasi/rekomendasi/store', [CustumerController::class, 'rekomendasiStore'])->name('spk/destinasi/rekomendasi.store');
