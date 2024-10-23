@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -38,11 +39,14 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
-            'username' => 'required|string',
-            'email' => 'required|email',
-            'password' => 'required|min:8',
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Password::defaults()],
             'role' => 'required|in:Pengguna,Administrator,Pengelola',
+        ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
         ]);
 
         User::create([
@@ -102,7 +106,7 @@ class UserController extends Controller
             $request->validate([
                 'password' => 'required|min:8'
             ]);
-            $data['password'] = $request->password;
+            $data['password'] = Hash::make($request->password);
         }
         $item = User::find(decrypt($id));
         $item->update($data);

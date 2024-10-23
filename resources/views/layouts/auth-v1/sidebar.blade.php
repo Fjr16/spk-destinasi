@@ -58,6 +58,12 @@
                 <div>Kategori Wisata</div>
             </a>
         </li>
+        <li class="menu-item {{ $title === 'Management User' ? 'active' : '' }}">
+            <a href="{{ route('spk/destinasi/user.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div>Manajemen user</div>
+            </a>
+        </li>
         
     </ul>
 </aside>

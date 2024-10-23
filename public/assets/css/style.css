@@ -4236,9 +4236,12 @@ input[type="button"].btn-block {
     color: inherit; }
 
 .alert-primary {
-  color: #004085;
-  background-color: #cce5ff;
-  border-color: #b8daff; }
+  /* color: #004085; */
+  color: #000;
+  /* background-color: #cce5ff; */
+  background-color: #fbceb5;
+  /* border-color: #b8daff; } */
+  border-color: #fbceb5; }
   .alert-primary hr {
     border-top-color: #9fcdff; }
   .alert-primary .alert-link {
