@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('maps_lokasi')->required();
             $table->string('foto')->nullable();
             $table->integer('rating')->default(0);
-            $table->integer('jumlah_fasilitas')->default(0);
+            $table->text('fasilitas')->nullable();
             $table->enum('status', ['accepted', 'denied', 'waiting'])->default('waiting');
             $table->timestamps();
         });

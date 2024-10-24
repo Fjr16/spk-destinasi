@@ -1,6 +1,7 @@
 @extends('layouts.auth-v1.main')
 @section('content')
 
+    @can('admin')
     <div class="accordion mb-2" id="accordionExample">
         <div class="card accordion-item active p-2">
             <h2 class="accordion-header" id="headingOne">
@@ -47,6 +48,7 @@
             </div>
         </div>
     </div>
+    @endcan
 
     <div class="card">
         <div class="card-header mb-0">
@@ -79,7 +81,9 @@
                                         @foreach ($criterias->sortBy('id') as $cri)      
                                             <th>{{ $cri->name ?? 'unknown' }}</th>
                                         @endforeach
+                                        @can('admin')
                                         <th>Action</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -96,14 +100,16 @@
                                                     <td>-</td>
                                                 @endfor
                                             @endif
-                                            <td>
-                                                <div class="d-flex">
-                                                    <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
-                                                    <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
-                                                        <i class="bx bx-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
+                                            @can('admin')       
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
+                                                        <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -120,7 +126,9 @@
                                         @foreach ($criterias->sortBy('id') as $cri)      
                                             <th>{{ $cri->name ?? 'unknown' }}</th>
                                         @endforeach
+                                        @can('admin')
                                         <th>Action</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -137,6 +145,7 @@
                                                     <td>-</td>
                                                 @endfor
                                             @endif
+                                            @can('admin')
                                             <td>
                                                 <div class="d-flex">
                                                     <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
@@ -145,6 +154,7 @@
                                                     </button>
                                                 </div>
                                             </td>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>

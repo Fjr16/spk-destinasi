@@ -11,11 +11,11 @@
       <a class="nav-item nav-link {{ $title == 'Rekomendasi' ? 'active' : '' }}" href="{{ route('spk/destinasi/rekomendasi.create') }}">Temukan Rekomendasi</a>
    </div>
    <ul class="navbar-nav ms-lg-auto">
-      {{-- <li class="nav-item">
-         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-user"></i> Profile</a>
-      </li> --}}
       <li class="nav-item">
-         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Logout</a>
+         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-history"></i> Riwayat</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" href="{{ route('login') }}"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Login</a>
       </li>
    </ul>
    </div>

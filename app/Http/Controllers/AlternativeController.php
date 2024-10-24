@@ -69,6 +69,7 @@ class AlternativeController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('admin');
         $data = TravelCategory::all();
         $item = Alternative::find(decrypt($id));
         return view('pages.alternative.edit', [
@@ -84,6 +85,7 @@ class AlternativeController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('admin');
         $request->validate([
             'foto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -107,11 +109,27 @@ class AlternativeController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('admin');
         $item = Alternative::find(decrypt($id));
 
         Storage::delete('public/' . $item->foto);
         $item->delete();
 
         return back()->with('success', 'Berhasil Dihapus');
+    }
+
+    public function confirm(Request $request, $id){
+        $this->authorize('admin');
+
+        $request->validate([
+            'status' => 'in:accepted,denied,waiting',
+        ]);
+
+        $item = Alternative::find(decrypt($id));
+        $item->update([
+            'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'Berhasil Memperbarui status');
     }
 }

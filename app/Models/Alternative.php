@@ -18,7 +18,7 @@ class Alternative extends Model
         'maps_lokasi',
         'foto',
         'rating',
-        'jumlah_fasilitas',
+        'fasilitas',
         'status',
     ];
 

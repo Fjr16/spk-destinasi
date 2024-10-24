@@ -15,40 +15,37 @@
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan nama lengkap anda" name="name" aria-describedby="floatingInputHelp" value="{{ old('name') }}" required/>
                         <label for="floatingInput">Nama</label>
-                        {{-- <div id="floatingInputHelp" class="form-text">We'll never share your details with anyone else.</div> --}}
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan titik lokasi keberangkatan anda" name="lokasi_user" aria-describedby="floatingInputHelp" value="{{ old('lokasi_user') }}" required/>
-                        <label for="floatingInput">Lokasi Keberangkatan</label>
-                    </div>
+                    @if ($isIncludeJarak)
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan titik lokasi keberangkatan anda" name="lokasi_user" aria-describedby="floatingInputHelp" value="{{ old('lokasi_user') }}" required/>
+                            <label for="floatingInput">Lokasi Keberangkatan</label>
+                        </div>
+                    @endif
                 </div>
                 <div class="col-md-4 border p-4">
                     <div class="mb-3">
-                        <h5 class="mb-0">Tingkat Kepentingan / Bobot (%)</h5>
+                        <h5 class="mb-0">Filter Pencarian</h5>
                         <small class="fst-italic">
-                            * Total Tingkat Kepentingan atau bobot harus sama dengan 100 %
+                            Filter membantu pengguna agar dapat memilih rekomendasi wisata berdasarkan keinginan atau kemauannya
                         </small>
                     </div>
-                    @foreach ($data as $index => $item)         
+                    @foreach ($data as $index => $item)
                         <div class="mb-3">
+                            <input type="hidden" name="kriteria_id[]" value="{{ $item->id ?? 'error' }}">
                             <label class="form-label" for="{{ $item->name ?? '' }}">{{ $item->name ?? 'unknown' }}</label>
-                            <div class="input-group">
-                                <input type="hidden" name="kriteria_id[]" value="{{ $item->id ?? 'error' }}">
-                                <input type="number" class="form-control" min="0" max="100" placeholder="0-100" aria-describedby="basic-addon1" id="{{ $item->name ?? '' }}" name="bobot[]" value="{{ old('bobot[]', 20) }}" required/>
-                                <span class="input-group-text" id="basic-addon1">%</span>
-                            </div>
-                        </div>
+                            <select class="form-select" id="{{ $item->name ?? '' }}" aria-label="Default select example" name="sub_criteria_id[]">
+                              <option value="All" selected>--- Tanpa Filter ---</option>
+                              @foreach ($item->subCriterias as $sub)
+                                <option value="{{ $sub->id }}" {{ old('sub_criteria_id') == $sub->id ? 'selected' : '' }}>{{ $sub->name ?? '-' }}</option>
+                              @endforeach
+                            </select>
+                          </div>
                     @endforeach
-                    <div class="border-top">
-                        <div class="input-group mt-2">
-                            <input type="number" class="form-control bg-dark text-white" placeholder="Total Kepentingan" aria-describedby="basic-addon1" id="total_bobot" value="100" readonly />
-                            <span class="input-group-text bg-dark text-white" id="basic-addon1">%</span>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="col-md-12 d-flex justify-content-center">
-                <a href="" class="btn btn-md btn-danger me-2"><i class="bx bx-x"></i> Batal</a>
+                <a href="{{ route('spk/destinasi/home.index') }}" class="btn btn-md btn-danger me-2"><i class="bx bx-x"></i> Batal</a>
                 <button type="submit" class="btn btn-md btn-primary"><i class='bx bx-sync'></i> Proses</button>
             </div>
         </form>

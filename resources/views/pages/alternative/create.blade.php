@@ -30,6 +30,10 @@
                             <label for="rating-wisata" class="form-label">Rating</label>
                             <input type="number" class="form-control form-control-md" id="rating-wisata" name="rating" placeholder="Rating atau Peringkat Wisata" value="{{ old('rating') }}" required />
                         </div>
+                        <div class="mb-3">
+                            <label for="fasilitas" class="form-label">Fasilitas</label>
+                            <textarea name="fasilitas" class="form-control form-control-md" id="fasilitas" cols="30" rows="3" placeholder="Fasilitas Yang Disediakan Pada Objek Wisata" required>{{ old('fasilitas') }}</textarea>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -40,10 +44,6 @@
                                 <option value="{{ $item->id }}" {{ old('travel_category_id') == $item->id ? 'selected' : '' }}>{{ $item->name ?? '-' }}</option>
                               @endforeach
                             </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="jumlah-fasilitas" class="form-label">Jumlah Fasilitas</label>
-                            <input type="number" class="form-control form-control-md" id="jumlah-fasilitas" name="jumlah_fasilitas" placeholder="Jumlah Fasilitas Pada Wisata" value="{{ old('jumlah_fasilitas') }}" required />
                         </div>
                         <div class="mb-3">
                             <label for="deskripsi-wisata" class="form-label">Deskripsi</label>

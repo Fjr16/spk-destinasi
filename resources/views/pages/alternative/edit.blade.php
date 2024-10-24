@@ -32,6 +32,12 @@
                         <input type="number" class="form-control form-control-md" id="rating-wisata" name="rating" placeholder="Rating atau Peringkat Wisata" value="{{ old('rating', $item->rating ?? '') }}" required />
                     </div>
                     <div class="mb-3">
+                        <label for="fasilitas" class="form-label">Jumlah Fasilitas</label>
+                        <textarea name="fasilitas" class="form-control form-control-md" id="fasilitas" cols="30" rows="7" placeholder="Fasilitas Yang Disediakan Pada Objek Wisata" required>{{ old('fasilitas', $item->fasilitas ?? '') }}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
                         <label for="kategori-wisata" class="form-label">Kategori</label>
                         <select class="form-select form-control" id="kategori-wisata" aria-label="Default select example" name="travel_category_id" required>
                           <option selected disabled>-- Pilih Kategori --</option>
@@ -40,12 +46,6 @@
                           @endforeach
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="jumlah-fasilitas" class="form-label">Jumlah Fasilitas</label>
-                        <input type="number" class="form-control form-control-md" id="jumlah-fasilitas" name="jumlah_fasilitas" placeholder="Jumlah Fasilitas Pada Wisata" value="{{ old('jumlah_fasilitas', $item->jumlah_fasilitas ?? '') }}" required />
-                    </div>
-                </div>
-                <div class="col-md-6">
                     <div class="mb-3">
                         <label for="deskripsi-wisata" class="form-label">Deskripsi</label>
                         <textarea name="deskripsi" class="form-control form-control-md" id="deskripsi-wisata" cols="30" rows="10" placeholder="Deskripsi tentang objek wisata">{{ old('deskripsi', $item->deskripsi ?? '') }}</textarea>

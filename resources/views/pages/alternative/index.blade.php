@@ -14,15 +14,15 @@
                             <th>#</th>
                             <th>Foto</th>
                             <th>Name</th>
-                            {{-- <th>Deskripsi</th> --}}
                             <th>Alamat</th>
                             <th>Harga</th>
                             <th>Lokasi</th>
                             <th>Kategori</th>
-                            {{-- <th>Rating</th> --}}
-                            {{-- <th>Jumlah Fasilitas</th> --}}
                             <th>Status</th>
+                            @can('admin')
+                            <th>Konfirmasi</th>
                             <th>Action</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -35,23 +35,40 @@
                                     </a>
                                 </td>
                                 <td>{{ $item->name ?? '-' }}</td>
-                                {{-- <td>{{ $item->deskripsi ?? '-' }}</td> --}}
                                 <td>{{ $item->alamat ?? '-' }}</td>
-                                <td>{{ $item->harga ?? '-' }}</td>
+                                <td class="text-nowrap">{{ 'Rp. ' . number_format($item->harga ?? 0) }}</td>
                                 <td>{{ $item->maps_lokasi ?? '-' }}</td>
                                 <td>{{ $item->travelCategory->name ?? '-' }}</td>
-                                {{-- <td>{{ $item->rating ?? '-' }}</td> --}}
-                                {{-- <td>{{ $item->jumlah_fasilitas ?? '-' }}</td> --}}
-                                <td>{{ $item->status ?? '-' }}</td>
+                                <td>
+                                    <span class="badge bg-{{ $item->status == 'accepted' ? 'success' : ($item->status == 'denied' ? 'danger' : 'warning') }}">{{ $item->status ?? '-' }}</span>
+                                </td>
+                                @can('admin')     
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('spk/destinasi/alternative.show', encrypt($item->id)) }}" class="btn btn-icon btn-outline-info"><i class="bx bx-detail"></i></a>
-                                        <a href="{{ route('spk/destinasi/alternative.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
+                                        <form action="{{ route('spk/destinasi/alternative.confirm', encrypt($item->id)) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                            @if ($item->status == 'waiting')
+                                                <button class="btn btn-icon btn-outline-success" type="submit" name="status" value="accepted"><i class="bx bx-check"></i></button>
+                                                <button class="btn btn-icon btn-outline-danger" type="submit" name="status" value="denied"><i class="bx bx-x"></i></button>
+                                            @elseif($item->status == 'accepted')
+                                                <button class="btn btn-icon btn-outline-danger" type="submit" name="status" value="denied"><i class="bx bx-x"></i></button>
+                                            @else
+                                                <button class="btn btn-icon btn-outline-success" type="submit" name="status" value="accepted"><i class="bx bx-check"></i></button>
+                                            @endif
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        <a href="{{ route('spk/destinasi/alternative.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning me-1"><i class="bx bx-edit"></i></a>
+                                            
                                         <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/alternative.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
                                             <i class="bx bx-trash"></i>
                                         </button>
                                     </div>
                                 </td>
+                                @endcan
                             </tr>
                         @endforeach
                     </tbody>

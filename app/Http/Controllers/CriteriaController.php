@@ -27,6 +27,7 @@ class CriteriaController extends Controller
      */
     public function create()
     {
+        $this->authorize('admin');
         return view('pages.kriteria.create', [
             'title' => 'kriteria',
             'menu' => 'data',
@@ -38,6 +39,8 @@ class CriteriaController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('admin');
+
         $data = $request->all();
         Criteria::create($data);
 
@@ -57,6 +60,8 @@ class CriteriaController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('admin');
+
         $item = Criteria::find(decrypt($id));
         return view('pages.kriteria.edit', [
             'title' => 'kriteria',
@@ -70,6 +75,8 @@ class CriteriaController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('admin');
+
         $item = Criteria::find(decrypt($id));
         $data = $request->all();
         if ($item->atribut == 'konstanta') {
@@ -89,6 +96,8 @@ class CriteriaController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('admin');
+
         $item = Criteria::find(decrypt($id));
         $item->delete();
 
@@ -97,6 +106,8 @@ class CriteriaController extends Controller
 
     public function activated(Request $request, string $id)
     {
+        $this->authorize('admin');
+
         $item = Criteria::find(decrypt($id));
         if ($item->atribut == 'konstanta') {
             if ($item->is_include == true) {

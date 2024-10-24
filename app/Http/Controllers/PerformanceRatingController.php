@@ -25,9 +25,9 @@ class PerformanceRatingController extends Controller
     public function index()
     {
         $isJarakInclude = Criteria::where('name', 'Jarak Tempuh')->where('is_include', true)->exists();
-        $alts = Alternative::doesntHave('performanceRatings')->get();
+        $alts = Alternative::where('status', 'accepted')->whereDoesntHave('performanceRatings')->get();
         $criterias = Criteria::whereNot('name', 'Jarak Tempuh')->get();
-        $data = Alternative::all();
+        $data = Alternative::where('status', 'accepted')->get();
         return view('pages.penilaian.index', [
             'title' => 'penilaian',
             'menu' => 'data',
@@ -51,6 +51,7 @@ class PerformanceRatingController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('admin');
         DB::beginTransaction();
         try {
             $this->validate($request, [
@@ -100,6 +101,7 @@ class PerformanceRatingController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('admin');
         $item = Alternative::find(decrypt($id));
         $criterias = Criteria::whereNot('name', 'Jarak Tempuh')->get();
         return view('pages.penilaian.edit', [
@@ -115,6 +117,7 @@ class PerformanceRatingController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('admin');
         DB::beginTransaction();
         try {
             $item = Alternative::find(decrypt($id));
@@ -156,6 +159,7 @@ class PerformanceRatingController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('admin');
         $item = Alternative::find(decrypt($id));
         if (!$item->performanceRatings->isEmpty()) {
             $item->performanceRatings()->delete();

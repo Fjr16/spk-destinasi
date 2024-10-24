@@ -21,6 +21,7 @@ class SubCriteriaController extends Controller
      */
     public function create($id)
     {
+        $this->authorize('admin');
         $item = Criteria::find(decrypt($id));
         return view('pages.kriteria-sub.create', [
             'title' => 'kriteria',
@@ -34,6 +35,8 @@ class SubCriteriaController extends Controller
      */
     public function store(Request $request, $id)
     {
+        $this->authorize('admin');
+
         $data = $request->all();
         $item = Criteria::find(decrypt($id));
 
@@ -56,6 +59,8 @@ class SubCriteriaController extends Controller
      */
     public function edit(string $id)
     {
+        $this->authorize('admin');
+
         $item = SubCriteria::find(decrypt($id));
         return view('pages.kriteria-sub.edit', [
             'title' => 'kriteria',
@@ -69,6 +74,8 @@ class SubCriteriaController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $this->authorize('admin');
+
         $data = $request->all();
         $item = SubCriteria::find(decrypt($id));
         
@@ -82,6 +89,8 @@ class SubCriteriaController extends Controller
      */
     public function destroy(string $id)
     {
+        $this->authorize('admin');
+
         $item = SubCriteria::find(decrypt($id));
         $item->delete();
         

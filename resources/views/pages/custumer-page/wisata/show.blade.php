@@ -40,7 +40,7 @@
                                             <tr>
                                                 <td class="fw-bold text-capitalized">Fasilitas</td>
                                                 <td  class="d-flex text-wrap">
-                                                    : {{ $item->jumlah_fasilitas ?? 0 }}
+                                                    : {{ $item->fasilitas ?? '-' }}
                                                 </td>
                                             </tr>
                                             <tr>
