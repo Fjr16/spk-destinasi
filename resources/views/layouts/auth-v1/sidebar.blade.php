@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="/" class="app-brand-link">
+        <a href="/dashboard" class="app-brand-link">
             <span class="app-brand-logo demo">
             </span>
             <span class="app-brand-text menu-text fw-bolder fs-4 ms-2 mt-1">SPK Destinasi</span>
@@ -19,7 +19,7 @@
         </li> --}}
         <!-- Dashboard -->
         <li class="menu-item {{ $title === 'Dashboard' ? 'active' : '' }}">
-            <a href="/" class="menu-link">
+            <a href="/dashboard" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>

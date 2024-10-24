@@ -15,7 +15,14 @@
          <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-history"></i> Riwayat</a>
       </li>
       <li class="nav-item">
-         <a class="nav-link" href="{{ route('login') }}"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Login</a>
+         @auth
+         <form action="{{ route('logout') }}" method="POST">
+         @csrf
+            <button class="btn nav-link"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Logout</button>
+         </form>
+         @else    
+            <a class="nav-link" href="{{ route('login') }}"><i class="tf-icons navbar-icon bx bx-lock-open-alt"></i> Login</a>
+         @endauth
       </li>
    </ul>
    </div>
