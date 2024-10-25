@@ -17,9 +17,10 @@
                         <label for="floatingInput">Nama</label>
                     </div>
                     @if ($isIncludeJarak)
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan titik lokasi keberangkatan anda" name="lokasi_user" aria-describedby="floatingInputHelp" value="{{ old('lokasi_user') }}" required/>
-                            <label for="floatingInput">Lokasi Keberangkatan</label>
+                        <div class="mb-3">
+                            <input type="hidden" class="form-control" id="maps-lokasi" placeholder="Masukkan titik lokasi keberangkatan anda" name="lokasi_user" value="{{ old('lokasi_user') }}" required/>
+                            <label for="map" class="form-label">Lokasi User</label>
+                            <div id="map" style="width: 100%; height: 300px;"></div>
                         </div>
                     @endif
                 </div>

@@ -42,6 +42,7 @@ class AlternativeController extends Controller
     {
         $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'maps_lokasi' => 'required',
         ]);
         $data = $request->all();
 
@@ -88,6 +89,7 @@ class AlternativeController extends Controller
         $this->authorize('admin');
         $request->validate([
             'foto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'maps_lokasi' => 'required',
         ]);
         
         $item = Alternative::find(decrypt($id));

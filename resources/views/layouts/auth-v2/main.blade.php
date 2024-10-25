@@ -25,6 +25,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     {{-- Flat Picker --}}
 
+    {{-- css Leaflet untuk maps --}}
+    <link rel="stylesheet" href="{{ asset('/assets/vendor/leaflet/leaflet.css') }}">
+    {{-- Leaflet --}}
+
     <style>
         /* .menu-link:hover {
             color: #161515 !important;
@@ -204,6 +208,35 @@
 
     <!-- Page JS -->
     <script src="{{ asset('/assets/js/dashboards-analytics.js') }}"></script>
+
+    {{-- js Leaflet untuk maps --}}
+    <script src="{{ asset('/assets/vendor/leaflet/leaflet.js') }}"></script>
+    {{-- Leaflet --}}
+    <script>
+        // untuk leaflet map
+        let map = L.map('map').setView([-0.9483107301737814, 100.37339582797605], 13);
+    
+        const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+    
+        var tempMarker;
+    
+        function onMapClick(e) {
+            if (tempMarker) {
+                map.removeLayer(tempMarker)
+            }
+            tempMarker = L.marker(e.latlng)
+                .addTo(map);
+    
+            var currentLatLang = e.latlng.lat + ', ' + e.latlng.lng;
+    
+            $('#maps-lokasi').val(currentLatLang);
+        }
+    
+        map.on('click', onMapClick);
+    </script>
 
     {{-- Datatables --}}
     <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
