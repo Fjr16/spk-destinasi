@@ -12,9 +12,6 @@
    </div>
    <ul class="navbar-nav ms-lg-auto">
       <li class="nav-item">
-         <a class="nav-link" href="javascript:void(0)"><i class="tf-icons navbar-icon bx bx-history"></i> Riwayat</a>
-      </li>
-      <li class="nav-item">
          @auth
          <form action="{{ route('logout') }}" method="POST">
          @csrf
