@@ -155,7 +155,7 @@
             </div>
             <div class="mt-3">
                 <h5 class="bg-label-dark p-4">Berdasarkan hasil penilaian dari beberapa objek wisata sesuai kriteria yang telah diberikan, 
-                    maka objek wisata dengan nama <span class="text-primary text-uppercase">{{ $arrPre[0]['alternative_name'] }}</span> dengan skor penilaian <span class="text-primary text-uppercase">{{ $arrPre[0]['preferensi'] }}</span></h5>
+                    maka direkomendasikan objek wisata dengan nama <span class="text-primary text-uppercase">{{ $arrPre[0]['alternative_name'] }}</span> dengan skor penilaian <span class="text-primary text-uppercase">{{ $arrPre[0]['preferensi'] }}</span></h5>
             </div>
         </div>
     </div>

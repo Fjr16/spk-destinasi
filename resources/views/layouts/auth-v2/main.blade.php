@@ -220,6 +220,8 @@
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
+
+        var tempMarker;
     
         $(document).ready(function(){
             // handle old location
@@ -234,9 +236,17 @@
         });      
 
         function onMapClick(e) {
-            alert("You clicked the map at " + e.latlng);
+            if (tempMarker) {
+                map.removeLayer(tempMarker)
+            }
+            tempMarker = L.marker(e.latlng)
+                .addTo(map);
+    
+            var currentLatLang = e.latlng.lat + ', ' + e.latlng.lng;
+    
+            $('#maps-lokasi').val(currentLatLang);
         }
-
+    
         map.on('click', onMapClick);
     </script>
 
