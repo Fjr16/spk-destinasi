@@ -24,7 +24,7 @@
                         <input type="number" class="form-control form-control-md" id="rating-wisata" name="rating" placeholder="Rating atau Peringkat Wisata" value="{{ old('rating', $item->rating ?? '') }}" required />
                     </div>
                     <div class="mb-3">
-                        <label for="fasilitas" class="form-label">Jumlah Fasilitas</label>
+                        <label for="fasilitas" class="form-label">Fasilitas</label>
                         <textarea name="fasilitas" class="form-control form-control-md" id="fasilitas" cols="30" rows="3" placeholder="Fasilitas Yang Disediakan Pada Objek Wisata" required>{{ old('fasilitas', $item->fasilitas ?? '') }}</textarea>
                     </div>
                     <div class="mb-3">

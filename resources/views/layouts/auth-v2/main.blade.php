@@ -221,20 +221,22 @@
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
     
-        var tempMarker;
-    
-        function onMapClick(e) {
-            if (tempMarker) {
-                map.removeLayer(tempMarker)
+        $(document).ready(function(){
+            // handle old location
+            var loc = $('#maps-lokasi').val();
+            loc = loc.split(", ");
+            if (loc) {
+                L.marker([loc[0], loc[1]])
+                .addTo(map)
+                .bindPopup(`Koordinat lokasi LatLng(${loc[0]}, ${loc[1]})`).
+                openPopup();
             }
-            tempMarker = L.marker(e.latlng)
-                .addTo(map);
-    
-            var currentLatLang = e.latlng.lat + ', ' + e.latlng.lng;
-    
-            $('#maps-lokasi').val(currentLatLang);
+        });      
+
+        function onMapClick(e) {
+            alert("You clicked the map at " + e.latlng);
         }
-    
+
         map.on('click', onMapClick);
     </script>
 

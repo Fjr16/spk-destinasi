@@ -23,7 +23,7 @@
                         <input type="text" class="form-control form-control-md" id="username" name="username" placeholder="Masukkan Username Anda" value="{{ old('username', $item->username) }}" required />
                     </div>
                     <div class="mb-3">
-                        <label for="password" class="form-label">Username</label>
+                        <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control form-control-md" id="password" name="password" placeholder="Perbarui Password"/>
                     </div>
                     <div class="mb-3">

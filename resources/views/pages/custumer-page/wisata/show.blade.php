@@ -52,6 +52,12 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="mt-3">
+                                        <input type="hidden" id="maps-lokasi" value="{{ $item->maps_lokasi ?? '' }}"/>
+                                        <div id="map" style="width: 100%; height: 300px;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

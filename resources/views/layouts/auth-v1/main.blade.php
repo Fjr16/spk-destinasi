@@ -204,6 +204,7 @@
     <script src="{{ asset('/assets/vendor/leaflet/leaflet.js') }}"></script>
     {{-- Leaflet --}}
     <script>
+
         // untuk leaflet map
         let map = L.map('map').setView([-0.9483107301737814, 100.37339582797605], 13);
     
@@ -213,6 +214,16 @@
         }).addTo(map);
     
         var tempMarker;
+
+        $(document).ready(function(){
+            // handle old location
+            var loc = $('#maps-lokasi').val();
+            loc = loc.split(", ");
+            if (loc) {
+                tempMarker = L.marker([loc[0], loc[1]])
+                .addTo(map);
+            }
+        });
     
         function onMapClick(e) {
             if (tempMarker) {

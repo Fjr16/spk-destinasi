@@ -95,21 +95,26 @@
                                                 @foreach ($item->performanceRatings->sortBy('criteria_id') as $r)
                                                     <td>{{ $r->subCriteria->bobot ?? $r->nilai }}</td>
                                                 @endforeach
+                                                @can('admin')       
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
+                                                            <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                @endcan
                                             @else
                                                 @for ($i = 0; $i < $criterias->count(); $i++)
                                                     <td>-</td>
                                                 @endfor
+                                                @can('admin')       
+                                                    <td>
+                                                        -
+                                                    </td>
+                                                @endcan
                                             @endif
-                                            @can('admin')       
-                                                <td>
-                                                    <div class="d-flex">
-                                                        <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
-                                                        <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
-                                                            <i class="bx bx-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -140,21 +145,26 @@
                                                 @foreach ($item->performanceRatings->sortBy('criteria_id') as $r)
                                                     <td>{{ $r->normalisasi ?? '0'  }}</td>
                                                 @endforeach
+                                                @can('admin')
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
+                                                            <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                @endcan
                                             @else
                                                 @for ($i = 0; $i < $criterias->count(); $i++)
                                                     <td>-</td>
                                                 @endfor
+                                                @can('admin')
+                                                <td>
+                                                    -
+                                                </td>
+                                                @endcan
                                             @endif
-                                            @can('admin')
-                                            <td>
-                                                <div class="d-flex">
-                                                    <a href="{{ route('spk/destinasi/penilaian.edit', encrypt($item->id)) }}" class="btn btn-icon btn-outline-warning mx-2"><i class="bx bx-edit"></i></a>
-                                                    <button class="btn btn-icon btn-outline-danger" type="button" data-url="{{ route('spk/destinasi/penilaian.destroy', encrypt($item->id)) }}" onclick="showModalDelete(this)">
-                                                        <i class="bx bx-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
