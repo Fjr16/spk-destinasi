@@ -19,6 +19,7 @@ class Alternative extends Model
         'foto',
         'rating',
         'fasilitas',
+        'aksesibilitas',
         'status',
     ];
 

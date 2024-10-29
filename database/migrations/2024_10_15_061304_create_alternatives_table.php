@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->integer('rating')->default(0);
             $table->text('fasilitas')->nullable();
+            $table->text('aksesibilitas')->nullable();
             $table->enum('status', ['accepted', 'denied', 'waiting'])->default('waiting');
             $table->timestamps();
         });

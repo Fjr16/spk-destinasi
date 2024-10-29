@@ -24,7 +24,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="alamat-wisata" class="form-label">Alamat</label>
-                            <textarea name="alamat" class="form-control form-control-md" id="alamat-wisata" cols="10" rows="6" placeholder="Alamat lokasi wisata">{{ old('alamat') }}</textarea>
+                            <textarea name="alamat" class="form-control form-control-md" id="alamat-wisata" cols="10" rows="3" placeholder="Alamat lokasi wisata">{{ old('alamat') }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aksesibilitas-wisata" class="form-label">Aksesibilitas</label>
+                            <textarea name="aksesibilitas" class="form-control form-control-md" id="aksesibilitas-wisata" cols="10" rows="1" placeholder="Aksesibilitas wisata">{{ old('aksesibilitas') }}</textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -43,7 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="deskripsi-wisata" class="form-label">Deskripsi</label>
-                            <textarea name="deskripsi" class="form-control form-control-md" id="deskripsi-wisata" cols="30" rows="5" placeholder="Deskripsi tentang objek wisata">{{ old('deskripsi') }}</textarea>
+                            <textarea name="deskripsi" class="form-control form-control-md" id="deskripsi-wisata" cols="30" rows="6" placeholder="Deskripsi tentang objek wisata">{{ old('deskripsi') }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="foto-wisata" class="form-label">Foto</label>

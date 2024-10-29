@@ -49,6 +49,12 @@
                                                     : {{ $item->alamat ?? '-' }}
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td class="fw-bold text-capitalized">Aksesibilitas</td>
+                                                <td  class="d-flex text-wrap">
+                                                    : {{ $item->aksesibilitas ?? '-' }}
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

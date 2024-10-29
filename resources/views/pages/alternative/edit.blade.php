@@ -31,6 +31,10 @@
                         <label for="alamat-wisata" class="form-label">Alamat</label>
                         <textarea name="alamat" class="form-control form-control-md" id="alamat-wisata" cols="10" rows="6" placeholder="Alamat lokasi wisata">{{ old('alamat', $item->alamat ?? '') }}</textarea>
                     </div>
+                    <div class="mb-3">
+                        <label for="aksesibilitas-wisata" class="form-label">Aksesibilitas</label>
+                        <textarea name="aksesibilitas" class="form-control form-control-md" id="aksesibilitas-wisata" cols="10" rows="1" placeholder="Aksesibilitas wisata">{{ old('aksesibilitas', $item->aksesibilitas ?? '') }}</textarea>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">

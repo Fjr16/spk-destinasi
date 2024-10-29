@@ -7,6 +7,9 @@ use App\Http\Controllers\PerformanceRatingController;
 use App\Http\Controllers\SubCriteriaController;
 use App\Http\Controllers\TravelCategoryController;
 use App\Http\Controllers\UserController;
+use App\Models\Alternative;
+use App\Models\Criteria;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,9 +25,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
+        $alt = Alternative::where('status', 'accepted')->get();
+        $cri = Criteria::all();
+        $user = User::all();
         return view('pages.dashboard.index', [
             "title" => "Dashboard",
             "menu" => "Dashboard",
+            "alt" => $alt,
+            "cri" => $cri,
+            "user" => $user,
         ]);
     });
     // Alternative
