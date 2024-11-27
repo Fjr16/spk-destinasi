@@ -32,16 +32,35 @@
                         </small>
                     </div>
                     @foreach ($data as $index => $item)
+                    @if ($item->name === 'Jarak Tempuh')
+                    <label class="form-label" for="{{ $item->name ?? '' }}">{{ $item->name ?? 'unknown' }}</label>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <select class="form-control" id="operator-jarak" name="operator_jarak">
+                                <option value="=">=</option>
+                                <option value=">">></option>
+                                <option value="<"><</option>
+                            </select>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="Filter Jarak Tempuh" aria-describedby="basic-addon13" name="value_jarak"/>
+                                <span class="input-group-text" id="basic-addon13">Km</span>
+                              </div>
+                        </div>
+                    </div>
+                    @else
                         <div class="mb-3">
                             <input type="hidden" name="kriteria_id[]" value="{{ $item->id ?? 'error' }}">
                             <label class="form-label" for="{{ $item->name ?? '' }}">{{ $item->name ?? 'unknown' }}</label>
                             <select class="form-select" id="{{ $item->name ?? '' }}" aria-label="Default select example" name="sub_criteria_id[]">
-                              <option value="All" selected>--- Tanpa Filter ---</option>
-                              @foreach ($item->subCriterias as $sub)
+                            <option value="All" selected>--- Tanpa Filter ---</option>
+                            @foreach ($item->subCriterias as $sub)
                                 <option value="{{ $sub->id }}" {{ old('sub_criteria_id') == $sub->id ? 'selected' : '' }}>{{ $sub->name ?? '-' }}</option>
-                              @endforeach
+                            @endforeach
                             </select>
-                          </div>
+                        </div>
+                    @endif
                     @endforeach
                 </div>
             </div>

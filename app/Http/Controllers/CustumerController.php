@@ -163,16 +163,44 @@ class CustumerController extends Controller
                 $arrToPush = [];
                 foreach ($alt->performanceRatings as $index => $pr) {
                     if ($isIncludeJarak && $request->lokasi_user && $index === 0) {
-                        $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $this->haversine($lokasiPengguna[0], $lokasiPengguna[1], $latWisata, $lonWisata);
+                        // filterisasi jarak tempuh
+                        $operatorJarak = $request->operator_jarak;
+                        $valueJarak = $request->value_jarak;
+                        $jarak = $this->haversine($lokasiPengguna[0], $lokasiPengguna[1], $latWisata, $lonWisata);
+                        if ($operatorJarak === '=') {
+                            if ($jarak == $valueJarak) {
+                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                            }else{
+                                continue;
+                            }
+                        }elseif($operatorJarak === '>') {
+                            if ($jarak > $valueJarak) {
+                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                            }else{
+                                continue;
+                            }
+                        }elseif($operatorJarak === '<') {
+                            if ($jarak < $valueJarak) {
+                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                            }else{
+                                continue;
+                            }
+                        }
+
                     }
                     $arrToPush[strtolower(str_replace(' ', '', $pr->criteria->name))] = $pr->nilai;
                 }
                 $collToPush = collect($arrToPush);
-                $collToPush->put('alternative_id', $alt->id);
-    
-                $arrA[$key] = $collToPush;
+                if (!$collToPush->isEmpty()) {
+                    $collToPush->put('alternative_id', $alt->id);
+                    $arrA[$key] = $collToPush;
+                }
             }
             $arrA = collect($arrA);
+            if ($arrA->isEmpty()) {
+                DB::rollBack();
+                return back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
+            }
     
             // normalisasi Bobot kriteria dan mendapatkan nilai minimal dan maksimal untuk pembagi
             $arrBobot = [];
