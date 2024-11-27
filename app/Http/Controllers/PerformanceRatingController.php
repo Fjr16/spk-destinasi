@@ -15,9 +15,45 @@ class PerformanceRatingController extends Controller
 {
 
     private function normalisasiBobot($kriteria, $bobot) {
+        // dd($kriteria);
+        // if ($kriteria->tipe === 'cost') {
+        //     # code...
+        // }
         $totalBobot = $kriteria->subCriterias->sum('bobot');
         $hasil = $bobot/$totalBobot;
         return $hasil;
+    }
+
+    private function cost($Xmin, $Xij){
+        $Rij = $Xmin/$Xij;
+        return $Rij;
+    }
+    
+    // normalisasi benefit
+    private function benefit($Xij, $Xmax){
+        $Rij = $Xij/$Xmax;        
+        return $Rij;
+    }
+
+    private function generateNormalisasiAlternatif($data, $tipe) {
+        $pembagi = 0;
+        if ($tipe === 'cost') {
+            $pembagi = $data->min('nilai');
+        }else{
+            $pembagi = $data->max('nilai');
+        }
+
+        foreach ($data as $key => $item) {
+            $normalizm = 0;
+            if ($tipe === 'cost') {
+                $normalizm = $this->cost($pembagi, $item->nilai);
+            } else {
+                $normalizm = $this->benefit($item->nilai, $pembagi);
+            }
+            $item->update([
+                'normalisasi' => $normalizm,
+            ]);
+        }
     }
     /**
      * Display a listing of the resource.
@@ -63,20 +99,24 @@ class PerformanceRatingController extends Controller
             foreach ($request['penilaian'] as $key => $r) {
                 $cri = Criteria::findOrFail($r['criteria_id']);
                 $subCriteria = SubCriteria::findOrFail($r['sub_criteria_id']);
-                $bobotNor = $this->normalisasiBobot($cri, $subCriteria->bobot);
 
                 $data = [
                     'alternative_id' => $request->alternative_id,
                     'criteria_id' => $r['criteria_id'],
                     'sub_criteria_id' => $r['sub_criteria_id'],
                     'nilai' => $subCriteria->bobot,
-                    'normalisasi' => $bobotNor,
+                    'normalisasi' => 0,
                 ];
 
                 PerformanceRating::create($data);
+                // update data normalisasi alternatif pada performance rating menggunakan rumus min max
+                $filterPerformance = PerformanceRating::where('criteria_id', $cri->id)->get();
+                $this->generateNormalisasiAlternatif($filterPerformance, $cri->tipe);
             }
 
             DB::commit();
+
+
             return redirect()->route('spk/destinasi/penilaian.index')->with('success', 'Berhasil Ditambahkan');
             
         } catch (\Illuminate\Validation\ValidationException $ve) {

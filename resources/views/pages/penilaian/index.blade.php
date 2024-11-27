@@ -93,7 +93,7 @@
                                             <td>{{ $item->name ?? '-' }}</td>
                                             @if ($item->performanceRatings->isNotEmpty())         
                                                 @foreach ($item->performanceRatings->sortBy('criteria_id') as $r)
-                                                    <td>{{ $r->subCriteria->bobot ?? $r->nilai }}</td>
+                                                    <td>{{ $r->nilai ?? '-' }}</td>
                                                 @endforeach
                                                 @can('admin')       
                                                     <td>
