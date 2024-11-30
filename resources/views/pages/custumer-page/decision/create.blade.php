@@ -31,6 +31,16 @@
                             Filter membantu pengguna agar dapat memilih rekomendasi wisata berdasarkan keinginan atau kemauannya
                         </small>
                     </div>
+                    {{-- travel category filter --}}
+                    <div class="mb-3">
+                        <label class="form-label" for="kategori-wisata">Kategori Wisata</label>
+                        <select class="form-control" id="kategori-wisata" name="travel_category_id">
+                            <option value="" selected>--- Tanpa Filter ---</option>
+                            @foreach ($travelCategory as $tc)
+                                <option value="{{ $tc->id }}">{{ $tc->name ?? '' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     @foreach ($data as $index => $item)
                     @if ($item->name === 'Jarak Tempuh')
                     <label class="form-label" for="{{ $item->name ?? '' }}">{{ $item->name ?? 'unknown' }}</label>

@@ -8,6 +8,7 @@ use App\Models\History;
 use App\Models\HistoryAlternatifValue;
 use App\Models\HistoryWeightNormalization;
 use App\Models\SubCriteria;
+use App\Models\TravelCategory;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,10 +67,12 @@ class CustumerController extends Controller
     {
         $data = Criteria::where('is_include', true)->get();
         $isIncludeJarak = Criteria::where('name', 'Jarak Tempuh')->where('is_include', true)->exists();
+        $travelCategory = TravelCategory::all();
         return view('pages.custumer-page.decision.create', [
             'title' => 'Rekomendasi',
             'data' => $data,
             'isIncludeJarak' => $isIncludeJarak,
+            'travelCategory' => $travelCategory,
         ]);
     }
 
@@ -106,10 +109,17 @@ class CustumerController extends Controller
     
             $dataAlternatif = $dataAwalAlternatif;
             if (!empty($criteriaId) && !empty($subCriteriaId)) {
-                // filter alternatif data
-                $dataAfterFilter1 = Alternative::whereHas('performanceRatings', function ($query) use ($criteriaId, $subCriteriaId) {
-                   $query->where('criteria_id', $criteriaId[0])->where('sub_criteria_id', $subCriteriaId[0]);
-                })->with('performanceRatings')->get();
+                if ($request->travel_category_id) {
+                    # code...
+                    $dataAfterFilter1 = Alternative::where('travel_category_id', $request->travel_category_id)->whereHas('performanceRatings', function ($query) use ($criteriaId, $subCriteriaId) {
+                       $query->where('criteria_id', $criteriaId[0])->where('sub_criteria_id', $subCriteriaId[0]);
+                    })->with('performanceRatings')->get();
+                }else{
+                    // filter alternatif data
+                    $dataAfterFilter1 = Alternative::whereHas('performanceRatings', function ($query) use ($criteriaId, $subCriteriaId) {
+                       $query->where('criteria_id', $criteriaId[0])->where('sub_criteria_id', $subCriteriaId[0]);
+                    })->with('performanceRatings')->get();
+                }
                 $dataAltAfterFilter = $dataAfterFilter1;
                 foreach ($criteriaId as $key => $criId) {
                     if ($key == 0) {
@@ -167,24 +177,28 @@ class CustumerController extends Controller
                         $operatorJarak = $request->operator_jarak;
                         $valueJarak = $request->value_jarak;
                         $jarak = $this->haversine($lokasiPengguna[0], $lokasiPengguna[1], $latWisata, $lonWisata);
-                        if ($operatorJarak === '=') {
-                            if ($jarak == $valueJarak) {
-                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
-                            }else{
-                                continue;
+                        if ($valueJarak) {
+                            if ($operatorJarak === '=') {
+                                if ($jarak == $valueJarak) {
+                                    $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                                }else{
+                                    continue;
+                                }
+                            }elseif($operatorJarak === '>') {
+                                if ($jarak > $valueJarak) {
+                                    $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                                }else{
+                                    continue;
+                                }
+                            }elseif($operatorJarak === '<') {
+                                if ($jarak < $valueJarak) {
+                                    $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
+                                }else{
+                                    continue;
+                                }
                             }
-                        }elseif($operatorJarak === '>') {
-                            if ($jarak > $valueJarak) {
-                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
-                            }else{
-                                continue;
-                            }
-                        }elseif($operatorJarak === '<') {
-                            if ($jarak < $valueJarak) {
-                                $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
-                            }else{
-                                continue;
-                            }
+                        }else{
+                            $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->name))] = $jarak;
                         }
 
                     }

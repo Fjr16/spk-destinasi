@@ -3,14 +3,14 @@
 @section('content')
 <div class="card">
     <div class="card-header border-bottom mb-4">
-        <h4 class="mb-1">Hasil Penilaian</h4>
+        <h4 class="mb-1">Hasil Rekomendasi</h4>
         <div class="small">
-            Alternatif Wisata Yang direkomendasikan Berdasarkan Kriteria yang ada adalah:
+            Berdasarkan kriteria yang telah dipilih, terdapat wisata yang direkomendasikan sebagai berikut:
         </div>
     </div>
     <div class="card-body">
-        <h5>A. Alternatif</h5>
-        <div class="nav-align-top mb-4">
+        {{-- <h5>A. Alternatif</h5> --}}
+        {{-- <div class="nav-align-top mb-4">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-home" aria-controls="navs-top-home" aria-selected="true">Un(Normalisasi)</button>
@@ -77,13 +77,13 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
-        <h5>B. Preferensi</h5>
-        <div class="card-body">
-            <div class="table-responsive text-nowrap mb-4">
-                <table class="table table-bordered" id="dataTable">
-                    <thead>
+        {{-- <h5>B. Preferensi</h5> --}}
+        {{-- <div class="card-body"> --}}
+            {{-- <div class="table-responsive text-nowrap mb-4"> --}}
+                {{-- <table class="table table-bordered" id="dataTable"> --}}
+                    {{-- <thead>
                         <tr>
                             <th>#</th>
                             <th>Nama Wisata</th>
@@ -92,45 +92,46 @@
                             @endforeach
                             <th>Total</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                    </thead> --}}
+                    {{-- <tbody> --}}
                         @php
                             $arrPre = [];
                         @endphp
                         @foreach ($item->historyAlternatifValues->groupBy('alternative_id') as $key => $histories)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                {{-- <td>{{ $loop->iteration }}</td> --}}
                                 @foreach ($histories as $detail)
                                 @if ($loop->first)
-                                <td>{{ $detail->alternative->name ?? '-' }}</td>
-                                @php
-                                    $arrPre[$key]['alternative_id'] = $detail->alternative->id ?? '-';
-                                    $arrPre[$key]['alternative_name'] = $detail->alternative->name ?? '-';
-                                @endphp
+                                {{-- <td>{{ $detail->alternative->name ?? '-' }}</td> --}}
+                                    @php
+                                        $arrPre[$key]['alternative_id'] = $detail->alternative->id ?? '-';
+                                        $arrPre[$key]['alternative_name'] = $detail->alternative->name ?? '-';
+                                    @endphp
                                 @endif
-                                <td>{{ $detail->nilai_preferensi ?? '-' }}</td>
+                                {{-- <td>{{ $detail->nilai_preferensi ?? '-' }}</td> --}}
                                 @endforeach
-                                <td>{{ $histories->sum('nilai_preferensi') }}</td>
+                                {{-- <td>{{ $histories->sum('nilai_preferensi') }}</td> --}}
                                 @php
                                     $arrPre[$key]['preferensi'] = $histories->sum('nilai_preferensi');
                                 @endphp
                             </tr>
                         @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    {{-- </tbody> --}}
+                {{-- </table> --}}
+            {{-- </div> --}}
+        {{-- </div> --}}
 
 
-        <h5>C. Peringkat</h5>
         <div class="card-body">
             <div class="table-responsive text-nowrap mb-4">
                 <table class="table table-bordered" id="dataTable">
                     <thead>
                         <tr>
+                            <th>No</th>
                             <th>Nama Wisata</th>
-                            <th>Total</th>
+                            <th>Nilai</th>
                             <th>Peringkat</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,9 +145,13 @@
                         @foreach ($arrPre as $index => $pre)
                             @if (in_array($pre['alternative_id'], $alts->pluck('id')->toArray()))
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $pre['alternative_name'] ?? '-' }}</td>
                                 <td>{{ $pre['preferensi'] ?? '-' }}</td>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <a href="{{ route('spk/destinasi/wisata.show', encrypt($pre['alternative_id'])) }}" class="btn btn-sm btn-primary">Lihat</a>
+                                </td>
                             </tr>
                             @endif
                         @endforeach
