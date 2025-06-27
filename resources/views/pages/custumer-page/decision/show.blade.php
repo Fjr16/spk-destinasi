@@ -1,4 +1,5 @@
-@extends('layouts.auth-v2.main')
+{{-- @extends('layouts.auth-v2.main') --}}
+@extends('layouts.guest.landing-page')
 
 @section('content')
 <div class="card">

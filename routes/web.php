@@ -54,24 +54,24 @@ Route::middleware('auth')->group(function () {
     Route::put('spk/destinasi/kriteria/wisata/update/{id}', [CriteriaController::class, 'update'])->name('spk/destinasi/kriteria.update');
     Route::delete('spk/destinasi/kriteria/wisata/destroy/{id}', [CriteriaController::class, 'destroy'])->name('spk/destinasi/kriteria.destroy');
     Route::put('spk/destinasi/kriteria/wisata/activated/{id}', [CriteriaController::class, 'activated'])->name('spk/destinasi/kriteria.activated');
-    
+
     // SubCriteria
     Route::get('spk/destinasi/sub/kriteria/wisata/create/{id}', [SubCriteriaController::class, 'create'])->name('spk/destinasi/sub/kriteria.create');
     Route::post('spk/destinasi/sub/kriteria/wisata/store/{id}', [SubCriteriaController::class, 'store'])->name('spk/destinasi/sub/kriteria.store');
     Route::get('spk/destinasi/sub/kriteria/wisata/edit/{id}', [SubCriteriaController::class, 'edit'])->name('spk/destinasi/sub/kriteria.edit');
     Route::put('spk/destinasi/sub/kriteria/wisata/update/{id}', [SubCriteriaController::class, 'update'])->name('spk/destinasi/sub/kriteria.update');
     Route::delete('spk/destinasi/sub/kriteria/wisata/destroy/{id}', [SubCriteriaController::class, 'destroy'])->name('spk/destinasi/sub/kriteria.destroy');
-    
+
     // Penilaian (R)
     Route::get('spk/destinasi/penilaian/wisata/index', [PerformanceRatingController::class, 'index'])->name('spk/destinasi/penilaian.index');
     Route::post('spk/destinasi/penilaian/wisata/store', [PerformanceRatingController::class, 'store'])->name('spk/destinasi/penilaian.store');
     Route::get('spk/destinasi/penilaian/wisata/edit/{id}', [PerformanceRatingController::class, 'edit'])->name('spk/destinasi/penilaian.edit');
     Route::put('spk/destinasi/penilaian/wisata/update/{id}', [PerformanceRatingController::class, 'update'])->name('spk/destinasi/penilaian.update');
     Route::delete('spk/destinasi/penilaian/wisata/destroy/{id}', [PerformanceRatingController::class, 'destroy'])->name('spk/destinasi/penilaian.destroy');
-    
+
 });
 
-Route::middleware('admin')->group(function () {    
+Route::middleware('admin')->group(function () {
     // Kategori Wisata
     Route::get('spk/destinasi/kategori/wisata/index', [TravelCategoryController::class, 'index'])->name('spk/destinasi/kategori/wisata.index');
     Route::get('spk/destinasi/kategori/wisata/create', [TravelCategoryController::class, 'create'])->name('spk/destinasi/kategori/wisata.create');
@@ -79,7 +79,7 @@ Route::middleware('admin')->group(function () {
     Route::get('spk/destinasi/kategori/wisata/edit/{id}', [TravelCategoryController::class, 'edit'])->name('spk/destinasi/kategori/wisata.edit');
     Route::put('spk/destinasi/kategori/wisata/update/{id}', [TravelCategoryController::class, 'update'])->name('spk/destinasi/kategori/wisata.update');
     Route::delete('spk/destinasi/kategori/wisata/destroy/{id}', [TravelCategoryController::class, 'destroy'])->name('spk/destinasi/kategori/wisata.destroy');
-    
+
     // User
     Route::get('spk/destinasi/user/index', [UserController::class, 'index'])->name('spk/destinasi/user.index');
     Route::get('spk/destinasi/user/create', [UserController::class, 'create'])->name('spk/destinasi/user.create');
@@ -92,12 +92,14 @@ Route::middleware('admin')->group(function () {
 
 // customer page
 // Route::middleware('guest')->group(function () {
-    Route::get('/', [CustumerController::class, 'wisataIndex'])->name('spk/destinasi/home.index');
+    Route::get('/', function(){
+        return view('layouts.guest.landing-page');
+    })->name('landing.page');
+    Route::get('/spk/destinasi/index', [CustumerController::class, 'wisataIndex'])->name('destinasi/wisata.index');
     Route::get('spk/destinasi/wisata/detail/{id}', [CustumerController::class, 'wisataShow'])->name('spk/destinasi/wisata.show');
     Route::get('spk/destinasi/rekomendasi/create', [CustumerController::class, 'rekomendasiCreate'])->name('spk/destinasi/rekomendasi.create');
     Route::post('spk/destinasi/rekomendasi/store', [CustumerController::class, 'rekomendasiStore'])->name('spk/destinasi/rekomendasi.store');
     Route::get('spk/destinasi/rekomendasi/riwayat/{id}', [CustumerController::class, 'lastHistory'])->name('spk/destinasi/rekomendasi.riwayat');
 // });
-
 
 require __DIR__.'/auth.php';
