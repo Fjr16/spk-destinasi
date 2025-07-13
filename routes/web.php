@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\AnalyticalHierarchyProcess;
 use App\Http\Controllers\AlternativeController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\CustumerController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Models\Alternative;
 use App\Models\Criteria;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -100,6 +102,20 @@ Route::middleware('admin')->group(function () {
     Route::get('spk/destinasi/rekomendasi/create', [CustumerController::class, 'rekomendasiCreate'])->name('spk/destinasi/rekomendasi.create');
     Route::post('spk/destinasi/rekomendasi/store', [CustumerController::class, 'rekomendasiStore'])->name('spk/destinasi/rekomendasi.store');
     Route::get('spk/destinasi/rekomendasi/riwayat/{id}', [CustumerController::class, 'lastHistory'])->name('spk/destinasi/rekomendasi.riwayat');
+
+    Route::get('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiIndex'])->name('preferensi.rekomendasi');
+    Route::post('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiStore'])->name('preferensi.store');
+
+    Route::get('/test', function(){
+        $ahp = new AnalyticalHierarchyProcess;
+        $res =  $ahp->generateQuestions();
+        return $res['matriks_manual_fill'];
+        return $res['matriks_auto_fill'];
+        return $ahp->getSkalaSaaty();
+    })->name('test');
+    Route::post('/test/store', function(Request $request){
+        return $request->all();
+    })->name('test.store');
 // });
 
 require __DIR__.'/auth.php';

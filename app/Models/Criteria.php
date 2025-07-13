@@ -13,8 +13,8 @@ class Criteria extends Model
         'kode',
         'name',
         'tipe',
-        'bobot',
-        'atribut',
+        // 'bobot',
+        // 'atribut',
         'is_include',
     ];
 
@@ -23,5 +23,16 @@ class Criteria extends Model
     }
     public function performanceRatings(){
         return $this->hasMany(PerformanceRating::class);
+    }
+
+    public function criteriaComparisons() {
+        return $this->hasMany(CriteriaComparison::class, 'criteria_id_first', 'id');
+    }
+    public function criteriaWeights() {
+        return $this->hasMany(CriteriaWeight::class);
+    }
+    public function criteriaWeightUser() {
+        return $this->hasOne(CriteriaWeight::class)
+        ->where('user_id', auth()->user()->id);
     }
 }

@@ -99,6 +99,9 @@
 
     <link rel="stylesheet" href="{{ asset('/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
     <!-- Datatables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.css">
 
@@ -242,6 +245,7 @@
 
     <!-- Vendors JS -->
     <script src="{{ asset('/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 
     <!-- Main JS -->
     <script src="{{ asset('/assets/js/main.js') }}"></script>
@@ -297,24 +301,14 @@
     {{-- end expand collapse table --}}    
 
     <script>
-        // {{-- new alert --}}
-        function alertShow(status, message, elementID){
-            const contentAlert = `
-            <div class="alert alert-danger d-flex" role="alert">
-                <span class="alert-icon rounded-circle"><i class='bx bxs-x-circle' style="font-size: 40px"></i></span>
-                <div class="d-flex flex-column ps-1">
-                    <h6 class="alert-heading d-flex align-items-center fw-bold mb-1">${status}</h6>
-                    <span>${message}</span>
-                </div>
-            </div>`;
-
-            $(elementID).html(contentAlert);
-
-            $(".alert").fadeTo(4000, 0).slideUp(1000, function() {
-                $(this).remove();
-            });
-            window.scrollTo(0, 0);
-        }
+        var notif = new Notyf({
+            duration: 1500,
+            dismissible:true,
+            position:{
+            x:'right',
+            y:'top',
+            }
+        });
     </script>
 
     {{-- modal konfirmasi delete dinamis --}}

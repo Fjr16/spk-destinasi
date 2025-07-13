@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('kode', 50)->nullable();
             $table->string('name', 100)->required();
             $table->enum('tipe',['cost', 'benefit'])->required();
-            $table->float('bobot')->default(0)->required();
-            $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
+            // $table->float('bobot')->default(0)->required();
+            // $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
             $table->boolean('is_include')->default(true);
             $table->timestamps();
         });

@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="{{ asset('/assets/vendor/leaflet/leaflet.css') }}">
     {{-- Leaflet --}}
 
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
     {{-- css --}}
     <style>
         .navbar {
@@ -142,6 +145,9 @@
                             <a class="nav-link mx-lg-2 {{ Route::is('destinasi/wisata.index') ? 'active' : '' }}" href="{{ route('destinasi/wisata.index') }}">Destinasi Wisata</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link mx-lg-2 {{ Route::is('preferensi.*') ? 'active' : '' }}" href="{{ route('preferensi.rekomendasi') }}">Preferensi</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link mx-lg-2 {{ Route::is('spk/destinasi/rekomendasi.*') ? 'active' : '' }}" href="{{ route('spk/destinasi/rekomendasi.create') }}">Rekomendasi</a>
                         </li>
                     </ul>
@@ -176,22 +182,27 @@
         @yield('content')
     </div>
 
+    <script src="{{ asset('/assets/vendor/libs/jquery/jquery.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
     {{-- js Leaflet untuk maps --}}
     <script src="{{ asset('/assets/vendor/leaflet/leaflet.js') }}"></script>
     {{-- Leaflet --}}
+
+    {{-- notyf --}}
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
     <script>
         // untuk leaflet map
         let map = L.map('map').setView([-0.9483107301737814, 100.37339582797605], 13);
-    
+
         const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
         var tempMarker;
-    
+
         $(document).ready(function(){
             // handle old location
             var loc = $('#maps-lokasi').val();
@@ -202,7 +213,7 @@
                 .bindPopup(`Koordinat lokasi LatLng(${loc[0]}, ${loc[1]})`).
                 openPopup();
             }
-        });      
+        });
 
         function onMapClick(e) {
             if (tempMarker) {
@@ -210,13 +221,23 @@
             }
             tempMarker = L.marker(e.latlng)
                 .addTo(map);
-    
+
             var currentLatLang = e.latlng.lat + ', ' + e.latlng.lng;
-    
+
             $('#maps-lokasi').val(currentLatLang);
         }
-    
+
         map.on('click', onMapClick);
+    </script>
+    <script>
+        var notif = new Notyf({
+                duration: 1500,
+                dismissible:true,
+                position:{
+                x:'right',
+                y:'top',
+            }
+        });
     </script>
   </body>
 </html>

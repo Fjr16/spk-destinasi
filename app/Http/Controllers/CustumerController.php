@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AnalyticalHierarchyProcess;
 use App\Models\Alternative;
 use App\Models\Criteria;
+use App\Models\CriteriaComparison;
+use App\Models\CriteriaWeight;
 use App\Models\History;
 use App\Models\HistoryAlternatifValue;
 use App\Models\HistoryWeightNormalization;
@@ -11,7 +14,10 @@ use App\Models\SubCriteria;
 use App\Models\TravelCategory;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class CustumerController extends Controller
@@ -22,10 +28,10 @@ class CustumerController extends Controller
     private function haversine($lat1, $lon1, $lat2, $lon2){
         $radiusBumi = 6371; //radius bumi dalam km
 
-        $dLat = deg2rad($lat2 - $lat1); 
+        $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
-        
-        $a = sin($dLat/2) * sin($dLat/2) + 
+
+        $a = sin($dLat/2) * sin($dLat/2) +
             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
             sin($dLon/2) * sin($dLon/2);
 
@@ -40,10 +46,10 @@ class CustumerController extends Controller
         $Rij = $Xmin/$Xij;
         return $Rij;
     }
-    
+
     // normalisasi benefit
     private function benefit($Xij, $Xmax){
-        $Rij = $Xij/$Xmax;        
+        $Rij = $Xij/$Xmax;
         return $Rij;
     }
     // end private  function
@@ -84,12 +90,12 @@ class CustumerController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->all();
-    
+
             // cast to int before filter alternatif data
             $dataAwalAlternatif = Alternative::where('status', 'accepted')->get();
             $dataCriteria = Criteria::where('is_include', true)->get();
             $isIncludeJarak = Criteria::where('name', 'Jarak Tempuh')->where('is_include', true)->exists();
-    
+
             if ($isIncludeJarak) {
                 $request->validate([
                     'lokasi_user' => 'required',
@@ -106,7 +112,7 @@ class CustumerController extends Controller
                 $criteriaId[] = (int) $criId;
                 $subCriteriaId[] = (int) ($data['sub_criteria_id'][$key]);
             }
-    
+
             $dataAlternatif = $dataAwalAlternatif;
             if (!empty($criteriaId) && !empty($subCriteriaId)) {
                 if ($request->travel_category_id) {
@@ -127,9 +133,9 @@ class CustumerController extends Controller
                     }
                     $dataAltAfterFilter =  $dataAltAfterFilter->filter(function ($item) use ($criId, $subCriteriaId, $key) {
                         $checkIfExist = $item->performanceRatings->first(function ($pr) use ($criId, $subCriteriaId, $key){
-                            return $pr->criteria_id === $criId && $pr->sub_criteria_id === $subCriteriaId[$key]; 
+                            return $pr->criteria_id === $criId && $pr->sub_criteria_id === $subCriteriaId[$key];
                         });
-        
+
                         if ($checkIfExist) {
                             return $item;
                         }
@@ -143,7 +149,7 @@ class CustumerController extends Controller
                 DB::rollBack();
                 return back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
             }
-    
+
             if ($isIncludeJarak && $request->lokasi_user) {
                 // menghitung jarak pengguna dan objek wisata
                 // latlon lokasi pengguna
@@ -162,11 +168,11 @@ class CustumerController extends Controller
                     $lokasiWisata = explode(',', $alt->maps_lokasi);
                     $latWisata = $lokasiWisata[0] ?? 0;
                     $lonWisata = $lokasiWisata[1] ?? 0;
-        
+
                     if (!$latWisata || !$lonWisata) {
                         return back()->with('success', 'Terjadi Kesalahan Saat mengghitung jarak, mohon periksa data lokasi objek wisata, pastikan dengan format = latitude, longitude');
                     }
-        
+
                     $criteriaJarakTempuh = Criteria::where('name', 'Jarak Tempuh')->first();
                 }
 
@@ -215,7 +221,7 @@ class CustumerController extends Controller
                 DB::rollBack();
                 return back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
             }
-    
+
             // normalisasi Bobot kriteria dan mendapatkan nilai minimal dan maksimal untuk pembagi
             $arrBobot = [];
             $totalBobot = $dataCriteria->sum('bobot');
@@ -229,7 +235,7 @@ class CustumerController extends Controller
                     $pembagi = $arrA->max($nameToVariabel);
                 }
                 // end mendapatkan nilai pembagi
-    
+
                 $normalisasiBobot = $criteria->bobot / $totalBobot;
                 $arrBobot[] = [
                     'criteria_id' => $criteria->id,
@@ -238,7 +244,7 @@ class CustumerController extends Controller
                     'pembagi' => $pembagi,
                 ];
             }
-    
+
             // normalisasi data penilaian untuk setiap alternatif
             $arrAn = [];
             foreach ($arrA as $inA => $a) {
@@ -253,7 +259,7 @@ class CustumerController extends Controller
                 }
             }
             // dd($arrAn);
-    
+
             // menghitung nilai prefrensi
             $v=[];
             foreach ($arrAn as $key => $alt) {
@@ -262,7 +268,7 @@ class CustumerController extends Controller
                     $v[$key][$w['kriteria']] = $alt[$w['kriteria']] * $w['bobot_normalisasi'];
                 }
             }
-    
+
             $vij = [];
             foreach ($v as $key => $pref) {
                 $vij[$key]['alternative_id'] = $pref['alternative_id'];
@@ -271,7 +277,7 @@ class CustumerController extends Controller
                     $vij[$key]['total'] += $pref[$w['kriteria']];
                 }
             }
-    
+
             // ket: $arrBobot = Normalisasi Bobot dan nilai pembagi
             // ket: $arrA = Nilai alternatif berdasarkan kriteria sebelum dinormalisasi
             // ket: $arrAn = Nilai alternatif berdasarkan kriteria setelah dinormalisasi
@@ -292,7 +298,7 @@ class CustumerController extends Controller
                     'pembagi' =>  $w['pembagi'],
                 ]);
 
-                
+
                 foreach ($arrA as $ka => $a) {
                     HistoryAlternatifValue::create([
                         'history_id' =>  $itemHis->id,
@@ -344,5 +350,186 @@ class CustumerController extends Controller
             'criterias' => $criterias,
             'alts' => $alts,
         ]);
+    }
+
+    public function preferensiIndex()
+    {
+        $ahp = new AnalyticalHierarchyProcess;
+        $dataComparison = $ahp->generateQuestions();
+
+        if(empty($dataComparison['matriks_auto_fill']) && empty($dataComparison['matriks_manual_fill'])){
+            return response()->json([
+                'status' => false,
+                'message' => 'Data Master Kriteria Not Found, Hubungi admin untuk mengisi data',
+            ]);
+        }
+
+        $dataOptions = $ahp->getSkalaSaaty();
+        return view('pages.custumer-page.preferensi.index', [
+            'title' => 'Preferensi Pencarian',
+            'dataComparison' => $dataComparison,
+            'dataOptions' => $dataOptions,
+        ]);
+    }
+
+    public function preferensiStore(Request $r){
+        $ahp = new AnalyticalHierarchyProcess;
+        $dataOptions = $ahp->getSkalaSaaty();
+        $nilaiExist = collect($dataOptions)->pluck('nilai')->toArray();
+
+        $validators = Validator::make($r->matriks_manual_fill, [
+            '*.criteria_id_first' => 'required|exists:criterias,id',
+            '*.criteria_id_second' => 'required|exists:criterias,id',
+            '*.nilai' => ['required', Rule::in($nilaiExist)],
+        ]);
+
+        if($validators->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal: ' . $validators->errors()->first(),
+            ]);
+        }
+
+        $dataMatriksManual = $r->matriks_manual_fill;
+        $dataMatriksAuto = $r->matriks_auto_fill;
+
+        $finalMatriksAutoFill = $this->autoFillMatriks($dataMatriksAuto, $dataMatriksManual);
+
+        $flattenMatriks = array_merge($finalMatriksAutoFill,$dataMatriksManual);
+        usort($flattenMatriks, function($a, $b){
+            return $a['criteria_id_first'] <=> $b['criteria_id_first'];
+        });
+
+        // get total nilai berdasarkan criteria_id_second
+        $groupByCriteriaSecond = collect($flattenMatriks)->groupBy('criteria_id_second');
+        $dataTotal = [];
+        foreach ($groupByCriteriaSecond as $criteriaIdSecond => $data) {
+            $dataTotal[$criteriaIdSecond] = [
+                'criteria_id' => $criteriaIdSecond,
+                'total' => $data->sum('nilai'),
+            ];
+        }
+
+        //normalisasi nilai matriks perbandingan
+        $finalMatriks = [];
+        foreach($flattenMatriks as $item){
+            $criteriaSecond = $item['criteria_id_second'];
+            $nilai = $item['nilai'];
+
+            $total = $dataTotal[$criteriaSecond]['total'];
+
+            $finalMatriks[] = [
+                'criteria_id_first' => $item['criteria_id_first'],
+                'criteria_id_second' => $criteriaSecond,
+                'nilai' => $nilai,
+                'nilai_normalisasi' => round($nilai/$total, 2),
+            ];
+        }
+
+        // get bobot berdasarkan criteria_id_first
+        $groupByCriteriaFirst = collect($finalMatriks)->groupBy('criteria_id_first');
+        foreach ($groupByCriteriaFirst as $criteriaIdFirst => $data) {
+            $length = $data->count();
+            $totalNilaiNormal = $data->sum('nilai_normalisasi');
+            $avg = $totalNilaiNormal/$length;
+            if (isset($dataTotal[$criteriaIdFirst])) {
+                $dataTotal[$criteriaIdFirst]['bobot'] = round($avg, 2);
+            }
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $userId = Auth::user()->id ?? null;
+            $sessionId = session()->getId();
+
+            CriteriaComparison::where(function($query) use ($userId, $sessionId){
+                if ($userId) {
+                    $query->where('user_id', $userId);
+                }else{
+                    $query->where('session_id', $sessionId);
+                }
+            })->delete();
+            
+            CriteriaWeight::where(function($q) use ($userId, $sessionId) {
+                if ($userId) {
+                    $q->where('user_id', $userId);
+                }else{
+                    $q->where('session_id', $sessionId);
+                }
+            })->delete();
+
+            // store final matriks pada tabel criteria_comparison
+            foreach($finalMatriks as $item){
+                $criteriaComparison = new CriteriaComparison();
+                if(Auth::check()){
+                    $criteriaComparison->user_id = $userId;
+                    $criteriaComparison->session_id = null;
+                }else{
+                    $criteriaComparison->user_id = null;
+                    $criteriaComparison->session_id = $sessionId;
+                }
+                $criteriaComparison->criteria_id_first = $item['criteria_id_first'];
+                $criteriaComparison->criteria_id_second = $item['criteria_id_second'];
+                $criteriaComparison->nilai = $item['nilai'] ?? 0;
+                $criteriaComparison->nilai_normalisasi = $item['nilai_normalisasi'] ?? 0;
+
+                $criteriaComparison->save();
+            }
+
+            // store bobot criteria pada tabel criteria_weights
+            foreach ($dataTotal as $key => $item) {
+                $criteriaW = new CriteriaWeight();
+                if (Auth::check()) {
+                    $criteriaW->user_id = $userId;
+                    $criteriaW->session_id = null;
+                }else{
+                    $criteriaW->user_id = null;
+                    $criteriaW->session_id = $sessionId;
+                }
+                $criteriaW->criteria_id = $item['criteria_id'];
+                $criteriaW->total = $item['total'];
+                $criteriaW->bobot = $item['bobot'];
+
+                $criteriaW->save();
+            }
+
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Sukses simpan preferensi'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi Kesalahan: ' . substr($th->getMessage(), 0, 95) . ' ...',
+                'errors' => $th->getMessage()
+            ]);
+        }
+    }
+
+    private function autoFillMatriks($matriksAuto, $matriksManual){
+        //mapping
+        $map = [];
+        foreach($matriksManual as $item){
+            $key = $item['criteria_id_first'] . '-' . $item['criteria_id_second'];
+            $map[$key] = (float) $item['nilai'] ?? 0;
+        }
+
+        //autofillmatriks
+        foreach($matriksAuto as &$item){
+            $first = $item['criteria_id_first'];
+            $second = $item['criteria_id_second'];
+
+            if (!is_null($item['nilai'])) {
+                continue;
+            }
+
+            $reverseKey = $second . '-' . $first;
+            if(isset($map[$reverseKey])){
+                $item['nilai'] = round(1/$map[$reverseKey], 2);
+            }
+        }
+        return $matriksAuto;
     }
 }

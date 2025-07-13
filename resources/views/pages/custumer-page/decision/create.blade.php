@@ -132,7 +132,7 @@
                         {{-- travel category filter --}}
                         <div class="mb-3">
                             <label class="form-label" for="kategori-wisata">Kategori Wisata</label>
-                            <select class="form-control" id="kategori-wisata" name="travel_category_id">
+                            <select class="form-control bg-dark" id="kategori-wisata" name="travel_category_id">
                                 <option value="" selected>--- Tanpa Filter ---</option>
                                 @foreach ($travelCategory as $tc)
                                     <option value="{{ $tc->id }}">{{ $tc->name ?? '' }}</option>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="col-md-10">
                                 <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Filter Jarak Tempuh" aria-describedby="basic-addon13" name="value_jarak" style=""/>
+                                    <input type="number" class="form-control bg-dark" placeholder="Filter Jarak Tempuh" aria-describedby="basic-addon13" name="value_jarak" style=""/>
                                     <span class="input-group-text bg-dark text-white" id="basic-addon13">Km</span>
                                   </div>
                             </div>
@@ -161,7 +161,7 @@
                             <div class="mb-3">
                                 <input type="hidden" name="kriteria_id[]" value="{{ $item->id ?? 'error' }}">
                                 <label class="form-label" for="{{ $item->name ?? '' }}">{{ $item->name ?? 'unknown' }}</label>
-                                <select class="form-select" id="{{ $item->name ?? '' }}" aria-label="Default select example" name="sub_criteria_id[]">
+                                <select class="form-select bg-dark" id="{{ $item->name ?? '' }}" aria-label="Default select example" name="sub_criteria_id[]">
                                 <option value="All" selected>--- Tanpa Filter ---</option>
                                 @foreach ($item->subCriterias as $sub)
                                     <option value="{{ $sub->id }}" {{ old('sub_criteria_id') == $sub->id ? 'selected' : '' }}>{{ $sub->name ?? '-' }}</option>
