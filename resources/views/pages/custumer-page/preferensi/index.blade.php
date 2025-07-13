@@ -252,6 +252,7 @@
                             message:res.message,
                             duration:3000
                         });
+                        console.log(res.errors);
                     }
                 },
                 error:function(xhr){
