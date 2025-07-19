@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('sub_criterias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('criteria_id')->required();
-            $table->string('name', 100)->required();
-            $table->float('bobot')->default(0)->required();
+            $table->foreignId('criteria_id')->nullable(false);
+            $table->string('label', 100)->nullable(false);
+            $table->decimal('min_value')->nullable();
+            $table->decimal('max_value')->nullable();
+            $table->integer('bobot')->default(0);
             $table->timestamps();
         });
     }

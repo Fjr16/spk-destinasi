@@ -79,13 +79,6 @@ class CriteriaController extends Controller
 
         $item = Criteria::find(decrypt($id));
         $data = $request->all();
-        if ($item->atribut == 'konstanta') {
-            $data = [
-                'tipe' => $request->tipe ?? '',
-                'bobot' => $request->bobot ?? 0,
-            ];
-        }
-
         $item->update($data);
 
         return redirect()->route('spk/destinasi/kriteria.index')->with('success', 'Berhasil Diperbarui');
@@ -109,16 +102,14 @@ class CriteriaController extends Controller
         $this->authorize('admin');
 
         $item = Criteria::find(decrypt($id));
-        if ($item->atribut == 'konstanta') {
-            if ($item->is_include == true) {
-                $item->update([
-                    'is_include' => false,
-                ]);
-            }else{
-                $item->update([
-                    'is_include' => true,
-                ]);
-            }
+        if ($item->is_include == true) {
+            $item->update([
+                'is_include' => false,
+            ]);
+        }else{
+            $item->update([
+                'is_include' => true,
+            ]);
         }
 
         return back()->with('success', 'Berhasil Diperbarui');

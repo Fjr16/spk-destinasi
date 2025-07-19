@@ -23,21 +23,43 @@ class DatabaseSeeder extends Seeder
 
         if (!DB::table('criterias')->where('name', 'Jarak Tempuh')->exists()) {
             DB::table('criterias')->insert([
-                'kode' => 'C1',
-                'name' => 'Jarak Tempuh',
-                'tipe' => 'cost',
-                'bobot' => 20,
-                'atribut' => 'konstanta',
-                'is_include' => true,
+                [
+                    'kode' => 'C1',
+                    'name' => 'Jarak Tempuh',
+                    'tipe' => 'cost',
+                    'jenis' => 'kuantitatif',
+                    'is_include' => true,
+                ],
+                [
+                    'kode' => 'C2',
+                    'name' => 'Harga',
+                    'tipe' => 'cost',
+                    'jenis' => 'kuantitatif',
+                    'is_include' => true,
+                ],
+                [
+                    'kode' => 'C3',
+                    'name' => 'Aksesibilitas',
+                    'tipe' => 'benefit',
+                    'jenis' => 'kualitatif',
+                    'is_include' => true,
+                ],
+                [
+                    'kode' => 'C4',
+                    'name' => 'Fasilitas',
+                    'tipe' => 'benefit',
+                    'jenis' => 'kualitatif',
+                    'is_include' => true,
+                ],
             ]);
         }
 
-        DB::table('users')->insert([
-            'name' => 'Admin',
-            'username' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'Administrator',
-        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'Admin',
+        //     'username' => 'admin',
+        //     'email' => 'admin@gmail.com',
+        //     'password' => Hash::make('admin123'),
+        //     'role' => 'Administrator',
+        // ]);
     }
 }

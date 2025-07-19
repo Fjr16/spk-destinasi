@@ -256,7 +256,7 @@
     {{-- Datatables --}}
     <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
     <script>
-        $('#datatable').DataTable();
+        $('.datatable').DataTable();
     </script>
 
     <!-- Place this tag in your head or just before your close body tag. -->

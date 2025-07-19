@@ -13,8 +13,7 @@ class Criteria extends Model
         'kode',
         'name',
         'tipe',
-        // 'bobot',
-        // 'atribut',
+        'jenis',
         'is_include',
     ];
 

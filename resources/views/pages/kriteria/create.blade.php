@@ -19,10 +19,6 @@
                         <input type="text" class="form-control form-control-md" id="nama-kriteria" name="name" placeholder="Nama" value="{{ old('name') }}" required />
                     </div>
                     <div class="mb-3">
-                        <label for="bobot-kriteria" class="form-label">Bobot (Nilai)</label>
-                        <input type="number" class="form-control form-control-md" id="bobot-kriteria" name="bobot" placeholder="Bobot" value="{{ old('bobot') }}" required />
-                    </div>
-                    <div class="mb-3">
                         <label for="tipe-kriteria" class="form-label">Tipe Kriteria</label>
                         <select class="form-select form-control" id="tipe-kriteria" aria-label="Default select example" name="tipe">
                           <option selected disabled>-- Pilih Tipe Kriteria --</option>

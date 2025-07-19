@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('criterias', function (Blueprint $table) {
             $table->id();
             $table->string('kode', 50)->nullable();
-            $table->string('name', 100)->required();
-            $table->enum('tipe',['cost', 'benefit'])->required();
+            $table->string('name', 100)->nullable(false);
+            $table->enum('tipe',['cost', 'benefit'])->nullable(false);
+            $table->enum('jenis',['kuantitatif', 'kualitatif'])->nullable(false);
             // $table->float('bobot')->default(0)->required();
             // $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
             $table->boolean('is_include')->default(true);
