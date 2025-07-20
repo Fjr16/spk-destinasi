@@ -15,7 +15,7 @@
                         <div class="row justify-content-between">
                             <div class="col-8">
                                 <h5 class="mb-1">Kriteria : {{ $item->name ?? '-' }} (<span class="text-uppercase">{{ $item->kode ?? '-' }}</span>) <span class="badge bg-{{ $item->tipe == 'cost' ? 'primary' : 'info' }}">{{ $item->tipe ?? '-' }}</span></h5>
-                                {{-- <p class="fst-italic">Bobot kriteria adalah <span class="text-primary fw-bold">{{ $item->bobot ?? 0 }}</span> dinormalisasi menjadi <span class="text-primary fw-bold">{{ $item->is_include == true ? (($item->bobot ?? 0)/($totalBobot ?? 0)) : '-' }}</span></p> --}}
+                                <span class="badge bg-{{ $item->jenis == 'kuantitatif' ? 'danger' : 'warning' }} fw-bold">{{ $item->jenis ?? '' }}</span>
                             </div>
                             @can('admin')     
                             <div class="col-4 d-flex justify-content-end">
@@ -65,7 +65,7 @@
                                     @foreach ($item->subCriterias as $sub)       
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $sub->label ?? '-' }}</td>
+                                            <td class="text-wrap">{{ $sub->label ?? '-' }}</td>
                                             <td>{{ $sub->formatted_min_value ?? '-' }}</td>
                                             <td>{{ $sub->formatted_max_value ?? '-' }}</td>
                                             <td>{{ $sub->bobot ?? 0 }}</td>

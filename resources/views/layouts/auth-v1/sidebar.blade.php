@@ -37,17 +37,17 @@
             <ul class="menu-sub">
                 <li class="menu-item {{ $title == 'alternative' ? 'active' : '' }}">
                     <a href="{{ route('spk/destinasi/alternative.index') }}" class="menu-link">
-                        <div>Alternatif Wisata (A)</div>
+                        <div>Alternatif Wisata</div>
                     </a>
                 </li>
                 <li class="menu-item {{ $title == 'kriteria' ? 'active' : '' }}">
                     <a href="{{ route('spk/destinasi/kriteria.index') }}" class="menu-link">
-                        <div>Kriteria (C)</div>
+                        <div>Kriteria</div>
                     </a>
                 </li>
                 <li class="menu-item {{ $title == 'penilaian' ? 'active' : '' }}">
                     <a href="{{ route('spk/destinasi/penilaian.index') }}" class="menu-link">
-                        <div>Penilaian (R)</div>
+                        <div>Penilaian</div>
                     </a>
                 </li>
             </ul>

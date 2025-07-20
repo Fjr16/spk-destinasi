@@ -27,6 +27,14 @@
                           <option value="benefit" {{ old('tipe', $item->tipe) == 'benefit' ? 'selected' : '' }}>Benefit</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="jenis_kriteria" class="form-label">Jenis Kriteria</label>
+                        <select class="form-select form-control" id="jenis_kriteria" aria-label="Default select example" name="jenis">
+                          <option selected disabled>-- Pilih Jenis Kriteria --</option>
+                          <option value="kuantitatif" {{ old('jenis', $item->jenis) == 'kuantitatif' ? 'selected' : '' }}>Kuantitatif</option>
+                          <option value="kualitatif" {{ old('jenis', $item->jenis) == 'kualitatif' ? 'selected' : '' }}>Kualitatif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-12 mt-4 border-top">
                     <div class="d-flex justify-content-center mt-4">
