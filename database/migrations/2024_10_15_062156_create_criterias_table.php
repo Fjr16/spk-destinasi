@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('tipe',['cost', 'benefit'])->nullable(false);
             $table->enum('jenis',['kuantitatif', 'kualitatif'])->nullable(false);
             // $table->float('bobot')->default(0)->required();
-            // $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
+            $table->enum('atribut', ['konstanta', 'dinamis'])->default('dinamis');
             $table->boolean('is_include')->default(true);
             $table->timestamps();
         });

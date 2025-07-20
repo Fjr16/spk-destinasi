@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alternative;
+use App\Models\Criteria;
+use App\Models\PerformanceRating;
 use App\Models\TravelCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AlternativeController extends Controller
 {
@@ -28,10 +32,15 @@ class AlternativeController extends Controller
     public function create()
     {
         $data = TravelCategory::all();
+        $criterias = Criteria::where('is_include', true)
+                    ->where('atribut', 'dinamis')
+                    ->with('subCriterias')
+                    ->get(); 
         return view('pages.alternative.create', [
             'title' => 'alternative',
             'menu' => 'data',
             'data' => $data,
+            'criterias' => $criterias,
         ]);
     }
 
@@ -41,8 +50,26 @@ class AlternativeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'name' => 'required',
+            'harga' => 'required',
+            'waktu_operasional' => 'required',
+            'alamat' => 'required',
+            'aksesibilitas' => 'required',
+            'travel_category_id' => 'required|exist:travel_categories, id',
+            'fasilitas' => 'required',
+            'deskripsi' => 'required',
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'maps_lokasi' => 'required',
+            'criteria_id' => 'required|array', 
+            'criteria_id.*' => 'required|exist:criterias, id',
+            'sub_criteria_id' => 'required|array', 
+            'sub_criteria_id.*' => 'required|exist:sub_criterias, id', 
+        ],[
+            'criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'criteria_id.*.exists' => 'kriteria penilaian tidak ditemukan',
+            'sub_criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'sub_criteria_id.*.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'sub_criteria_id.*.exists' => 'Pilihan tidak ditemukan pada penilaian alternatif wisata',
         ]);
         $data = $request->all();
 
@@ -50,11 +77,26 @@ class AlternativeController extends Controller
         if ($request->file('foto')) {
             $path = $request->foto->store('imgUpload', 'public');
         }
+        
+        try {
+            DB::beginTransaction();
+            $data['foto'] = $path;
+            $item = Alternative::create($data);
 
-        $data['foto'] = $path;
-        Alternative::create($data);
-
-        return redirect()->route('spk/destinasi/alternative.index')->with('success', 'Berhasil Ditambahkan');
+            foreach ($data['criteria_id'] as $key => $criId) {
+                $instance = new PerformanceRating;
+                $instance->alternative_id = $item->id;
+                $instance->criteria_id = $criId;
+                $instance->sub_criteria_id = $data['sub_criteria_id'][$key];
+                $instance->save();
+            }
+    
+            DB::commit();
+            return redirect()->route('spk/destinasi/alternative.index')->with('success', 'Berhasil Ditambahkan');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi Kesalahan: '. $th->getMessage())->withInput();
+        }
     }
 
     /**
@@ -73,11 +115,23 @@ class AlternativeController extends Controller
         $this->authorize('admin');
         $data = TravelCategory::all();
         $item = Alternative::find(decrypt($id));
+        $pRating = [];
+        if ($item->performanceRatings->isNotEmpty()) {
+            foreach ($item->performanceRatings as $pr) {
+                $pRating[$item->id . '-' .$pr->criteria_id] = $pr->sub_criteria_id;
+            }
+        } 
+        $criterias = Criteria::where('is_include', true)
+            ->where('atribut', 'dinamis')
+            ->with('subCriterias')
+            ->get(); 
         return view('pages.alternative.edit', [
             'title' => 'alternative',
             'menu' => 'data',
             'item' => $item,
             'data' => $data,
+            'criterias' => $criterias,
+            'pRating' => $pRating,
         ]);
     }
 
@@ -87,23 +141,65 @@ class AlternativeController extends Controller
     public function update(Request $request, string $id)
     {
         $this->authorize('admin');
-        $request->validate([
-            'foto' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        $validators = Validator::make($request->all(), [
+            'name' => 'required',
+            'harga' => 'required',
+            'waktu_operasional' => 'required',
+            'alamat' => 'required',
+            'aksesibilitas' => 'required',
+            'travel_category_id' => 'required|exists:travel_categories,id',
+            'fasilitas' => 'required',
+            'deskripsi' => 'required',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'maps_lokasi' => 'required',
+            'criteria_id' => 'required|array', 
+            'criteria_id.*' => 'required|exists:criterias,id',
+            'sub_criteria_id' => 'required|array', 
+            'sub_criteria_id.*' => 'required|exists:sub_criterias,id', 
+        ],[
+            'criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'criteria_id.*.exists' => 'kriteria penilaian tidak ditemukan',
+            'sub_criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'sub_criteria_id.*.required' => 'Form Penilaian alternatif wisata wajib diisi',
+            'sub_criteria_id.*.exists' => 'Pilihan tidak ditemukan pada penilaian alternatif wisata',
         ]);
+        if ($validators->fails()) {
+            return back()->with('error', 'Gagal Validasi: '. $validators->errors()->first())->withInput();
+        }
         
-        $item = Alternative::find(decrypt($id));
-        $data = $request->except('foto');
-        if ($request->file('foto')) {
-            // Hapus foto sebelumnya
-            Storage::delete('public/' . $item->foto);
-            // Simpan foto terbaru
-            $data['foto'] = $request->foto->store('imgUpload', 'public');
+        
+        try {
+            DB::beginTransaction();
+
+            $item = Alternative::find(decrypt($id));
+            $data = $request->except('foto');
+            if ($request->file('foto')) {
+                // Hapus foto sebelumnya
+                Storage::delete('public/' . $item->foto);
+                // Simpan foto terbaru
+                $data['foto'] = $request->foto->store('imgUpload', 'public');
+            }
+            $item->update($data);
+
+            foreach ($data['criteria_id'] as $key => $criId) {
+                $check = PerformanceRating::where('alternative_id', $item->id)
+                        ->where('criteria_id', $criId)
+                        ->first();
+                $instance = $check ? $check : new PerformanceRating;
+                $instance->alternative_id = $item->id;
+                $instance->criteria_id = $criId;
+                $instance->sub_criteria_id = $data['sub_criteria_id'][$key];
+                $instance->save();
+            }
+    
+            DB::commit();
+            return redirect()->route('spk/destinasi/alternative.index')->with('success', 'Berhasil Diperbarui');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi Kesalahan: '. $th->getMessage())->withInput();
         }
 
-        $item->update($data);
 
-        return redirect()->route('spk/destinasi/alternative.index')->with('success', 'Berhasil Diperbarui');
     }
 
     /**

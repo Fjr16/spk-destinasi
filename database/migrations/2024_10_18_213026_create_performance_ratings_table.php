@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('alternative_id')->required();
             $table->foreignId('criteria_id')->required();
             $table->foreignId('sub_criteria_id')->nullable();
-            $table->float('nilai')->nullable();
-            $table->double('normalisasi')->nullable();
             $table->timestamps();
         });
     }

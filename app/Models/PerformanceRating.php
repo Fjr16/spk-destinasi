@@ -13,15 +13,15 @@ class PerformanceRating extends Model
         'alternative_id',
         'criteria_id',
         'sub_criteria_id',
-        'nilai',
-        'normalisasi',
     ];
 
     public function alternative() {
         return $this->belongsTo(Alternative::class);
     }
-
     public function criteria() {
         return $this->belongsTo(Criteria::class);
+    }
+    public function subCriteria() {
+        return $this->belongsTo(SubCriteria::class);
     }
 }

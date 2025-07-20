@@ -17,9 +17,9 @@ class Alternative extends Model
         'harga',
         'maps_lokasi',
         'foto',
-        'rating',
         'fasilitas',
         'aksesibilitas',
+        'waktu_operasional',
         'status',
     ];
 

@@ -20,9 +20,9 @@ return new class extends Migration
             $table->decimal('harga', 10,2)->required();
             $table->string('maps_lokasi')->required();
             $table->string('foto')->nullable();
-            $table->integer('rating')->default(0);
             $table->text('fasilitas')->nullable();
             $table->text('aksesibilitas')->nullable();
+            $table->string('waktu_operasional')->default('Buka Setiap Hari');
             $table->enum('status', ['accepted', 'denied', 'waiting'])->default('waiting');
             $table->timestamps();
         });

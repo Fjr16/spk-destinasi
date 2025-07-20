@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Jarak Tempuh',
                     'tipe' => 'cost',
                     'jenis' => 'kuantitatif',
+                    'atribut' => 'konstanta',
                     'is_include' => true,
                 ],
                 [
@@ -35,6 +36,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Harga',
                     'tipe' => 'cost',
                     'jenis' => 'kuantitatif',
+                    'atribut' => 'dinamis',
                     'is_include' => true,
                 ],
                 [
@@ -42,6 +44,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Aksesibilitas',
                     'tipe' => 'benefit',
                     'jenis' => 'kualitatif',
+                    'atribut' => 'dinamis',
                     'is_include' => true,
                 ],
                 [
@@ -49,6 +52,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Fasilitas',
                     'tipe' => 'benefit',
                     'jenis' => 'kualitatif',
+                    'atribut' => 'dinamis',
                     'is_include' => true,
                 ],
             ]);

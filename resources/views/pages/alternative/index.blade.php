@@ -13,7 +13,8 @@
                         <tr>
                             <th>#</th>
                             <th>Foto</th>
-                            <th>Name</th>
+                            <th>Nama Destinasi</th>
+                            <th>Waktu Operasional</th>
                             <th>Alamat</th>
                             <th>Harga</th>
                             <th>Lokasi</th>
@@ -35,6 +36,7 @@
                                     </a>
                                 </td>
                                 <td>{{ $item->name ?? '-' }}</td>
+                                <td>{{ $item->waktu_operasional ?? '-' }}</td>
                                 <td>{{ $item->alamat ?? '-' }}</td>
                                 <td class="text-nowrap">{{ 'Rp. ' . number_format($item->harga ?? 0) }}</td>
                                 <td>{{ $item->maps_lokasi ?? '-' }}</td>

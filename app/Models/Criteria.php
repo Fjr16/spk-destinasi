@@ -15,6 +15,7 @@ class Criteria extends Model
         'tipe',
         'jenis',
         'is_include',
+        'atribut',
     ];
 
     public function subCriterias(){

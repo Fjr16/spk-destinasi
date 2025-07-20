@@ -92,6 +92,9 @@ class CriteriaController extends Controller
         $this->authorize('admin');
 
         $item = Criteria::find(decrypt($id));
+        $item->criteriaComparisons()->delete();
+        $item->criteriaWeights()->delete();
+        $item->subCriterias()->delete();
         $item->delete();
 
         return back()->with('success', 'Berhasil Dihapus');

@@ -32,7 +32,7 @@
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 {{-- <i class="menu-icon tf-icons bx bxs-cog"></i> --}}
                 <i class='menu-icon tf-icons bx bx-box'></i>
-                <div>Data</div>
+                <div>Data AHP</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ $title == 'alternative' ? 'active' : '' }}">
@@ -45,11 +45,11 @@
                         <div>Kriteria</div>
                     </a>
                 </li>
-                <li class="menu-item {{ $title == 'penilaian' ? 'active' : '' }}">
+                {{-- <li class="menu-item {{ $title == 'penilaian' ? 'active' : '' }}">
                     <a href="{{ route('spk/destinasi/penilaian.index') }}" class="menu-link">
                         <div>Penilaian</div>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
 
