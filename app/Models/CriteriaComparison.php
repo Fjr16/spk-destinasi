@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class CriteriaComparison extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'nilai' => 'integer',
-    ];
+    // protected $casts = [
+    //     'nilai' => 'integer',
+    // ];
 
     protected $fillable = [
         'user_id',

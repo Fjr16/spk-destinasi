@@ -1,47 +1,206 @@
 {{-- @extends('layouts.auth-v2.main') --}}
 @extends('layouts.guest.landing-page')
 
+@push('page-css')
+    <style>
+      body {
+        background: url('/assets/img/bg-old.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+      }
+      body::before {
+          background-color: rgba(0, 0, 0, 0.6);
+          content: "";
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+      }
+
+      .content-wrapper {
+        /* padding-top: 120px; */
+        padding-bottom: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: none;
+      }
+
+      .card-title, .card-text {
+        color: #333;
+      }
+      
+      .page-title {
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        letter-spacing: 1px;
+        animation: fadeInDown 1s ease;
+        position: relative;
+      }
+
+      .page-title::after {
+        content: '';
+        width: 80px;
+        height: 4px;
+        background-color: #ffffff;
+        display: block;
+        margin: 15px auto 0;
+        border-radius: 10px;
+      }
+
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .card-img-top {
+          height: 250px; /* atur sesuai kebutuhan, misal 250px */
+          object-fit: cover;
+          border-top-left-radius: 0.75rem;
+          border-top-right-radius: 0.75rem;
+      }
+
+        .card.overlay-card {
+            /* background-color: rgba(255, 255, 255, 0.15); transparan putih */
+            background-color: rgba(75, 75, 75, 0.4);
+            backdrop-filter: blur(10px);                /* blur latar belakang */
+            -webkit-backdrop-filter: blur(10px);        /* support Safari */
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .overlay-card label,
+        .overlay-card h5,
+        .overlay-card .form-control,
+        .overlay-card .form-control::placeholder,
+        .overlay-card select {
+            color: white;
+        }
+        .overlay-card .form-control,
+        .overlay-card .form-select {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+    </style>
+@endpush
+
 @section('content')
-<div class="card">
-    <div class="card-header border-bottom mb-4">
-        <h4 class="mb-1">Hasil Rekomendasi</h4>
-        <div class="small">
-            Berdasarkan kriteria yang telah dipilih, terdapat wisata yang direkomendasikan sebagai berikut:
-        </div>
-    </div>
-    <div class="card-body">
-        {{-- <h5>A. Alternatif</h5> --}}
-        {{-- <div class="nav-align-top mb-4">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-home" aria-controls="navs-top-home" aria-selected="true">Un(Normalisasi)</button>
-                </li>
-                <li class="nav-item">
-                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-profile" aria-controls="navs-top-profile" aria-selected="false">Normalisasi</button>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="navs-top-home" role="tabpanel">
-                    <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered" id="dataTable">
-                            <thead>
+<div class="container content-wrapper">
+    <div class="page-title">TOP 5 Destinasi Hasil Rekomendasi</div>
+    <div class="card overlay-card">
+        <div class="card-body p-5">
+            <div class="card position-relative p-4" style="background-color: rgba(255, 255, 255, 0.1)">
+                <h5>A. Matriks Perbandingan AHP (Converted Skala Saaty)</h5>
+                <div class="ms-4">
+                    <span class="badge bg-primary">Sumber: Data Preferensi Pengguna</span>
+                </div>
+                
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap mb-4">
+                        <table class="table table-hover table-striped table-borderless align-middle text-center rounded-3 overflow-hidden shadow-sm">
+                            <thead class="table-dark text-white">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Nama Wisata</th>
-                                    @foreach ($criterias->sortBy('id') as $cri)      
-                                        <th>{{ $cri->name ?? 'unknown' }}</th>
+                                    <th>Kriteria</th>
+                                    @foreach ($kriterias as $row)
+                                    <th>{{ $row ?? '-' }}</th>
                                     @endforeach
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($item->historyAlternatifValues->groupBy('alternative_id') as $histories)
+                            <tbody class="bg-white">
+                                @foreach ($kriterias as $row)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        @foreach ($histories as $detail)
-                                        @if ($loop->first)
-                                        <td>{{ $detail->alternative->name ?? '-' }}</td>
-                                        @endif
-                                        <td>{{ $detail->nilai_awal ?? '-' }}</td>
+                                        <th class="bg-light">{{ $row }}</th>
+                                        @foreach ($kriterias as $col)
+                                            <td>{{ $matriks[$row][$col] }}</td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+
+                                <tr class="fw-bold">
+                                    <td class="text-danger">Total</td>
+                                    @foreach ($kriterias as $col)
+                                        <td class="text-danger">{{ $criteriaTotals[$col]->total ?? 0 }}</td>
+                                    @endforeach
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <h5>B. Matriks Perbandingan AHP (Normalized)</h5>
+                <div class="ms-4">
+                    <span class="badge bg-primary">Sumber: normalisasi[row-n][col-n] = nilai[row-n][col-n] / total[col-n]</span>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap mb-4">
+                        <table class="table table-hover table-striped table-borderless align-middle text-center rounded-3 overflow-hidden shadow-sm">
+                            <thead class="table-dark text-white">
+                                <tr>
+                                    <th>Kriteria</th>
+                                    @foreach ($kriterias as $row)
+                                    <th>{{ $row ?? '-' }}</th>
+                                    @endforeach
+                                    <th>Rata-rata (Bobot)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                @foreach ($kriterias as $row)
+                                    <tr>
+                                        <th class="bg-light">{{ $row }}</th>
+                                        @foreach ($kriterias as $col)
+                                            <td>{{ $matriksNormalisasi[$row][$col] }}</td>
+                                        @endforeach
+                                        <td class="fw-bold text-danger">{{ $criteriaTotals[$row]->bobot ?? 0 }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <h5>C. Nilai Alternatif Wisata Terhadap Kriteria (Normalized)</h5>
+                <div class="ms-4">
+                    <span class="badge bg-primary">Sumber: Bobot real dari nilai kriteria yang dinormalisasi</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap mb-4">
+                        <table class="table table-hover table-striped table-borderless align-middle text-center rounded-3 overflow-hidden shadow-sm">
+                            <thead class="table-dark text-white">
+                                <tr>
+                                    <th>Nama Wisata</th>
+                                    @foreach (array_keys($mappedAlternatif->first()) as $key)
+                                    @if ($key !== 'Nama Alternatif')
+                                    <th>{{ $key }}</th>
+                                    @endif
+                                    @endforeach
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                @foreach ($mappedAlternatif as $row)
+                                    <tr>
+                                        <td class="fw-semibold text-capitalize">{{ $row['Nama Alternatif'] }}</td>
+                                        @foreach ($row as $key => $value)
+                                            @if ($key !== 'Nama Alternatif')
+                                                <td>{{ $value ?? 0 }}</td>
+                                            @endif
                                         @endforeach
                                     </tr>
                                 @endforeach
@@ -49,119 +208,52 @@
                         </table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="navs-top-profile" role="tabpanel">
-                    <div class="table-responsive text-nowrap">
-                        <table class="table table-bordered" id="dataTable">
-                            <thead>
+
+                <h5>D. Hasil Akhir AHP</h5>
+                <div class="ms-4">
+                    <span class="badge bg-primary">Sumber: &sum;(bobot kriteria x nilai alternatif)</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap mb-4">
+                        <table class="table table-hover table-striped table-borderless align-middle text-center rounded-3 overflow-hidden shadow-sm">
+                            <thead class="table-dark text-white">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Nama Wisata</th>
-                                    @foreach ($criterias->sortBy('id') as $cri)      
-                                        <th>{{ $cri->name ?? 'unknown' }}</th>
-                                    @endforeach
+                                    <th style="width: 5%">No</th>
+                                    <th style="width: 35%">Nama Wisata</th>
+                                    <th style="width: 20%">Skor Akhir</th>
+                                    <th style="width: 15%">Peringkat</th>
+                                    <th style="width: 25%">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($item->historyAlternatifValues->groupBy('alternative_id') as $histories)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    @foreach ($histories as $detail)
-                                    @if ($loop->first)
-                                    <td>{{ $detail->alternative->name ?? '-' }}</td>
-                                    @endif
-                                    <td>{{ $detail->nilai_normalisasi ?? '-' }}</td>
-                                    @endforeach
-                                </tr>
+                            <tbody class="bg-white">
+                                @foreach ($data as $index => $item)
+                                    <tr>
+                                        <td class="fw-semibold">{{ $loop->iteration }}</td>
+                                        <td class="text-capitalize">{{ $item['wisata']->name ?? '-' }}</td>
+                                        <td>{{ $item['skor_akhir'] }}</td>
+                                        <td>
+                                            <span class="badge {{ $item['ranking'] == 1 ? 'bg-warning text-dark' : 'bg-primary' }} rounded-pill px-3 py-2 fs-6">{{ $item['ranking'] }}</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('spk/destinasi/wisata.show', encrypt($item['wisata']->id)) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                                <i class="bx bx-show me-1"></i> Lihat
+                                            </a>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
-        </div> --}}
-
-        {{-- <h5>B. Preferensi</h5> --}}
-        {{-- <div class="card-body"> --}}
-            {{-- <div class="table-responsive text-nowrap mb-4"> --}}
-                {{-- <table class="table table-bordered" id="dataTable"> --}}
-                    {{-- <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nama Wisata</th>
-                            @foreach ($criterias->sortBy('id') as $cri)      
-                                <th>{{ $cri->name ?? 'unknown' }}</th>
-                            @endforeach
-                            <th>Total</th>
-                        </tr>
-                    </thead> --}}
-                    {{-- <tbody> --}}
-                        @php
-                            $arrPre = [];
-                        @endphp
-                        @foreach ($item->historyAlternatifValues->groupBy('alternative_id') as $key => $histories)
-                            <tr>
-                                {{-- <td>{{ $loop->iteration }}</td> --}}
-                                @foreach ($histories as $detail)
-                                @if ($loop->first)
-                                {{-- <td>{{ $detail->alternative->name ?? '-' }}</td> --}}
-                                    @php
-                                        $arrPre[$key]['alternative_id'] = $detail->alternative->id ?? '-';
-                                        $arrPre[$key]['alternative_name'] = $detail->alternative->name ?? '-';
-                                    @endphp
-                                @endif
-                                {{-- <td>{{ $detail->nilai_preferensi ?? '-' }}</td> --}}
-                                @endforeach
-                                {{-- <td>{{ $histories->sum('nilai_preferensi') }}</td> --}}
-                                @php
-                                    $arrPre[$key]['preferensi'] = $histories->sum('nilai_preferensi');
-                                @endphp
-                            </tr>
-                        @endforeach
-                    {{-- </tbody> --}}
-                {{-- </table> --}}
-            {{-- </div> --}}
-        {{-- </div> --}}
-
-
-        <div class="card-body">
-            <div class="table-responsive text-nowrap mb-4">
-                <table class="table table-bordered" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Wisata</th>
-                            <th>Nilai</th>
-                            <th>Peringkat</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            usort($arrPre, function($a, $b) {
-                                return $b['preferensi'] <=> $a['preferensi'];
-                            });
-    
-                            // print_r($arrPre);
-                        @endphp
-                        @foreach ($arrPre as $index => $pre)
-                            @if (in_array($pre['alternative_id'], $alts->pluck('id')->toArray()))
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $pre['alternative_name'] ?? '-' }}</td>
-                                <td>{{ $pre['preferensi'] ?? '-' }}</td>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>
-                                    <a href="{{ route('spk/destinasi/wisata.show', encrypt($pre['alternative_id'])) }}" class="btn btn-sm btn-primary">Lihat</a>
-                                </td>
-                            </tr>
-                            @endif
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-            <div class="mt-3">
-                <h5 class="bg-label-dark p-4">Berdasarkan hasil penilaian dari beberapa objek wisata sesuai kriteria yang telah diberikan, 
-                    maka direkomendasikan objek wisata dengan nama <span class="text-primary text-uppercase">{{ $arrPre[0]['alternative_name'] }}</span> dengan skor penilaian <span class="text-primary text-uppercase">{{ $arrPre[0]['preferensi'] }}</span></h5>
+                <div class="card-footer p-0">
+                        <h5 class="bg-label-dark p-4">
+                            Berdasarkan hasil penilaian dari beberapa objek wisata sesuai preferensi yang telah diberikan, maka direkomendasikan objek wisata 
+                            <span class="text-warning fw-bold text-uppercase">{{ $data[0]['wisata']->name }}</span>
+ 
+                            dengan skor AHP sebesar 
+                            <span class="text-warning fw-semibold">{{ $data[0]['skor_akhir'] }}</span>
+                        </h5>
+                </div>
             </div>
         </div>
     </div>

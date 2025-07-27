@@ -146,26 +146,6 @@ class SubCriteriaController extends Controller
                     'message' => 'rentang nilai beririsan dengan sub kriteria ' . $sub->label
                 ];
             }
-
-            // logika diatas telah mewakili semua logika dibawah ini
-            // if ($minValue >= $sub->min_value && $minValue <= $sub->max_value) {
-            //     return [
-            //         'status' => false,
-            //         'message' => 'rentang nilai beririsan dengan sub kriteria ' . $sub->label
-            //     ];
-            // }
-            // if ($maxValue >= $sub->min_value && $maxValue <= $sub->max_value) {
-            //     return [
-            //         'status' => false,
-            //         'message' => 'nilai maksimum beririsan dengan sub kriteria ' . $sub->label
-            //     ];
-            // }
-            // if($minValue <= $sub->min_value && $maxValue >= $sub->max_value) {
-            //     return [
-            //         'status' => false,
-            //         'message' => 'nilai minimum dan maksimum beririsan dengan sub kriteria ' . $sub->label
-            //     ];
-            // }
         }
 
         return [

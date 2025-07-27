@@ -238,6 +238,14 @@
                 y:'top',
             }
         });
+        const notif = new Notyf({
+                duration: 3000,
+                dismissible:true,
+                position:{
+                x:'right',
+                y:'top',
+            }
+        });
 
         @if (session('success'))
             notyf.success("{{ session('success') }}");

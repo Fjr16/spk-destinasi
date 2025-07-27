@@ -112,7 +112,7 @@
                     <div class="col-md-7 me-1">
                         <h5>Detail Pengguna</h5>
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan nama lengkap anda" name="name" aria-describedby="floatingInputHelp" value="{{ old('name') }}" required/>
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Masukkan nama lengkap anda" name="name" aria-describedby="floatingInputHelp" value="{{ old('name', Auth::user()->name ?? '') }}" required/>
                         </div>
                         @if ($isIncludeJarak)
                             <div class="mb-3">
@@ -164,7 +164,7 @@
                                 <select class="form-select bg-dark" id="{{ $item->name ?? '' }}" aria-label="Default select example" name="sub_criteria_id[]">
                                 <option value="All" selected>--- Tanpa Filter ---</option>
                                 @foreach ($item->subCriterias as $sub)
-                                    <option value="{{ $sub->id }}" {{ old('sub_criteria_id') == $sub->id ? 'selected' : '' }}>{{ $sub->name ?? '-' }}</option>
+                                    <option value="{{ $sub->id }}" {{ old('sub_criteria_id') == $sub->id ? 'selected' : '' }}>{{ $sub->label ?? '-' }}</option>
                                 @endforeach
                                 </select>
                             </div>

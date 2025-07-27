@@ -101,7 +101,7 @@ Route::middleware('admin')->group(function () {
     Route::get('spk/destinasi/wisata/detail/{id}', [CustumerController::class, 'wisataShow'])->name('spk/destinasi/wisata.show');
     Route::get('spk/destinasi/rekomendasi/create', [CustumerController::class, 'rekomendasiCreate'])->name('spk/destinasi/rekomendasi.create');
     Route::post('spk/destinasi/rekomendasi/store', [CustumerController::class, 'rekomendasiStore'])->name('spk/destinasi/rekomendasi.store');
-    Route::get('spk/destinasi/rekomendasi/riwayat/{id}', [CustumerController::class, 'lastHistory'])->name('spk/destinasi/rekomendasi.riwayat');
+    Route::get('spk/destinasi/rekomendasi/result', [CustumerController::class, 'rekomendasiResult'])->name('spk/destinasi/rekomendasi.result');
 
     Route::get('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiIndex'])->name('preferensi.rekomendasi');
     Route::post('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiStore'])->name('preferensi.store');
