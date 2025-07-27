@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Criteria;
+use App\Models\CriteriaWeight;
 use Illuminate\Support\Facades\Auth;
 
 class AnalyticalHierarchyProcess
@@ -13,9 +14,6 @@ class AnalyticalHierarchyProcess
         $this->criteria = Criteria::query();
     }
 
-    // public function getBobot() {
-
-    // }
     public function generateQuestions() {
         $criteria = $this->criteria->where('is_include', true)->get();
 
@@ -95,7 +93,6 @@ class AnalyticalHierarchyProcess
         return $matriks;
     }
 
-
     public function getSkalaSaaty() {
             $data = [
                 [
@@ -135,6 +132,24 @@ class AnalyticalHierarchyProcess
                     'ket' => 'Ekstrem penting',
                 ],
             ];
+        return $data;
+    }
+
+    // bobot hasil perbandingan kriteria
+    public function getBobotCriteriaOfUser($session_id, $user_id){
+        $data = null;
+        if ($user_id) {
+            $data = CriteriaWeight::where('user_id', $user_id)
+                    ->select('id', 'user_id', 'criteria_id', 'total', 'bobot')
+                    ->with('criteria')
+                    ->get();
+        }
+        if ($session_id && !$user_id) {
+            $data = CriteriaWeight::where('session_id', $session_id)
+                    ->select('id', 'session_id', 'criteria_id', 'total', 'bobot')
+                    ->with('criteria')
+                    ->get();
+        }
         return $data;
     }
 }
