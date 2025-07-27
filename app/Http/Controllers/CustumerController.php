@@ -84,7 +84,7 @@ class CustumerController extends Controller
             'status' => $comparison && $bobot,
             'message' => $comparison && $bobot
                 ? 'success'
-                : 'Terjadi Kesalahan, Mohon isi ulang form preferensi',
+                : 'Data preferensi anda tidak ditemukan, mohon isi preferensi terlebih dahulu',
         ];
     }
 
@@ -150,17 +150,18 @@ class CustumerController extends Controller
     {
         // \Log::info("start rekomendasi", ['time' => now()]);
 
+        
         $authId = Auth::user()->id ?? null;
         $sess_id = session()->getId();
+        $res = $this->checkIsExistWeight($authId, $sess_id);
+        if (!$res['status']) {
+            return redirect()->route('preferensi.rekomendasi')->with('error', $res['message']);
+        }
+
         $cacheLockKey = 'proses_perhitungan_user_or_session_id_' . ($authId ?? $sess_id);
 
-        
         try {
             Cache::lock($cacheLockKey, 6)->block(4, function() use ($request, $authId, $sess_id){
-                $res = $this->checkIsExistWeight($authId, $sess_id);
-                if (!$res['status']) {
-                    return redirect()->route('preferensi.rekomendasi')->with('error', $res['message']);
-                }
     
                 DB::beginTransaction();
                 $data = $request->all();
@@ -193,6 +194,7 @@ class CustumerController extends Controller
     
                 $dataAlternatif = $dataAwalAlternatif;
                 $altQuery = Alternative::query();
+                $altQuery->where('status', 'accepted');
                 if ($request->travel_category_id) {
                     $altQuery->where('travel_category_id', $request->travel_category_id);
                 }
@@ -534,7 +536,7 @@ class CustumerController extends Controller
         try {
             DB::beginTransaction();
 
-            $userId = Auth::user()->id;
+            $userId = Auth::user()->id ?? null;
             $sessionId = session()->getId();
 
             CriteriaComparison::where(function($query) use ($userId, $sessionId){

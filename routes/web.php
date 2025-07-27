@@ -1,6 +1,5 @@
 <?php
 
-use App\Helpers\AnalyticalHierarchyProcess;
 use App\Http\Controllers\AlternativeController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\CustumerController;
@@ -92,8 +91,7 @@ Route::middleware('admin')->group(function () {
 });
 
 
-// customer page
-// Route::middleware('guest')->group(function () {
+    // customer page
     Route::get('/', function(){
         return view('layouts.guest.landing-page');
     })->name('landing.page');
@@ -106,16 +104,15 @@ Route::middleware('admin')->group(function () {
     Route::get('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiIndex'])->name('preferensi.rekomendasi');
     Route::post('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiStore'])->name('preferensi.store');
 
-    Route::get('/test', function(){
-        $ahp = new AnalyticalHierarchyProcess;
-        $res =  $ahp->generateQuestions();
-        return $res['matriks_manual_fill'];
-        return $res['matriks_auto_fill'];
-        return $ahp->getSkalaSaaty();
-    })->name('test');
-    Route::post('/test/store', function(Request $request){
-        return $request->all();
-    })->name('test.store');
-// });
+    // Route::get('/test', function(){
+    //     $ahp = new AnalyticalHierarchyProcess;
+    //     $res =  $ahp->generateQuestions();
+    //     return $res['matriks_manual_fill'];
+    //     return $res['matriks_auto_fill'];
+    //     return $ahp->getSkalaSaaty();
+    // })->name('test');
+    // Route::post('/test/store', function(Request $request){
+    //     return $request->all();
+    // })->name('test.store');
 
 require __DIR__.'/auth.php';
