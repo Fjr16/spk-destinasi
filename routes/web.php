@@ -63,13 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::put('spk/destinasi/sub/kriteria/wisata/update/{id}', [SubCriteriaController::class, 'update'])->name('spk/destinasi/sub/kriteria.update');
     Route::delete('spk/destinasi/sub/kriteria/wisata/destroy/{id}', [SubCriteriaController::class, 'destroy'])->name('spk/destinasi/sub/kriteria.destroy');
 
-    // Penilaian (R)
-    // Route::get('spk/destinasi/penilaian/wisata/index', [PerformanceRatingController::class, 'index'])->name('spk/destinasi/penilaian.index');
-    // Route::post('spk/destinasi/penilaian/wisata/store', [PerformanceRatingController::class, 'store'])->name('spk/destinasi/penilaian.store');
-    // Route::get('spk/destinasi/penilaian/wisata/edit/{id}', [PerformanceRatingController::class, 'edit'])->name('spk/destinasi/penilaian.edit');
-    // Route::put('spk/destinasi/penilaian/wisata/update/{id}', [PerformanceRatingController::class, 'update'])->name('spk/destinasi/penilaian.update');
-    // Route::delete('spk/destinasi/penilaian/wisata/destroy/{id}', [PerformanceRatingController::class, 'destroy'])->name('spk/destinasi/penilaian.destroy');
-
 });
 
 Route::middleware('admin')->group(function () {
