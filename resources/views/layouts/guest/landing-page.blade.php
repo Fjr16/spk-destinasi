@@ -230,14 +230,22 @@
         map.on('click', onMapClick);
     </script>
     <script>
-        var notif = new Notyf({
-                duration: 1500,
+        const notyf = new Notyf({
+                duration: 3000,
                 dismissible:true,
                 position:{
                 x:'right',
                 y:'top',
             }
         });
+
+        @if (session('success'))
+            notyf.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error') || session('errors'))
+            notyf.error("{{ session('error') ?? session('errors') }}");
+        @endif
     </script>
   </body>
 </html>
