@@ -53,7 +53,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="foto-wisata" class="form-label">Foto</label>
-                                <input type="file" class="form-control form-control-md" id="foto-wisata" name="foto"/>
+                                <input type="file" class="form-control form-control-md" id="foto-wisata" name="foto" onchange="previewImage(this)"/>
+                                <img id="preview-image" src="" alt="" class="img-fluid mt-4" width="250" height="250" style="display: none;">
+                                {{-- preview image --}}
                                 @error('foto')
                                 <div class="small text-danger fst-italic">
                                     * {{ $message ?? '' }}
@@ -78,14 +80,14 @@
                 <h5 class="card-title text-white p-2 bg-danger rounded-top ps-3">Penilaian Alternatif Wisata</h5>
                 <div class="card-text mb-4">
                     <div class="row">
-                        @foreach ($criterias as $item)
+                        @foreach ($criterias as $index => $item)
                             <input type="hidden" name="criteria_id[]" value="{{ $item->id }}">
                             <div class="col-md-6 mb-3">
                                 <label for="sub-criteria-{{ $item->name }}" class="form-label">{{ $item->name ?? '-' }}</label>
                                 <select class="form-select form-control" id="sub-criteria-{{ $item->id }}" aria-label="Default select example" name="sub_criteria_id[]" required>
                                     <option selected disabled>-- Pilih --</option>
                                     @foreach ($item->subCriterias as $key => $opt)
-                                        <option value="{{ $opt->id }}" {{ old('sub_criteria_id') == $opt->id ? 'selected' : '' }}>{{ $opt->label ?? '-' }}</option>
+                                        <option value="{{ $opt->id }}" {{ old('sub_criteria_id') ? (old('sub_criteria_id')[$index] == $opt->id ? 'selected' : '') : '' }}>{{ $opt->label ?? '-' }}</option>
                                     @endforeach
                                 </select>
                             </div>

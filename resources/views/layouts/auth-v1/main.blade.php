@@ -325,6 +325,39 @@
             modal.modal('show');
         }
     </script>
+    <script>
+        function previewImage(element){
+            const file = element.files[0];
+            const allowedSize = 2 * 1024 * 1024;
+            const allowedTypes = ['image/jpeg', 'image/png']
+            
+            if (file) {
+                if (!allowedTypes.includes(file.type)) {
+                    $(element).val('');
+                    $('#preview-image').hide();
+                    notif.error('Gambar yang diterima hanya .jpg atau .png');
+                    return;
+                }
+                if (file.size > allowedSize) {
+                    $(element).val('');
+                    $('#preview-image').attr('src', '');
+                    $('#preview-image').hide();
+                    notif.error('maksimal ukuran gambar adalah 2 MB');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e){
+                    $('#preview-image').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+                $('#preview-image').show();
+            }else{
+                $('#preview-image').attr('src', '');
+                $('#preview-image').hide();
+            }
+
+        }
+    </script>
 
     @yield('script')
 

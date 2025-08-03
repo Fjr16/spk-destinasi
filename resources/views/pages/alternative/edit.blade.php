@@ -55,14 +55,14 @@
                             <textarea name="deskripsi" class="form-control form-control-md" id="deskripsi-wisata" cols="30" rows="5" placeholder="Deskripsi tentang objek wisata">{{ old('deskripsi', $item->deskripsi ?? '') }}</textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="current-foto" class="form-label">Foto Sekarang</label>
+                            <label for="preview-image" class="form-label">Foto Sekarang</label>
                             <p>
-                                <a href="{{ Storage::url($item->foto) }}" id="current-foto" ><img src="{{ Storage::url($item->foto) }}" alt="" class="img-fluid" width="300" height="300"></a>
+                                <img src="{{ Storage::url($item->foto) }}" id="preview-image" alt="" class="img-fluid" width="250" height="250">
                             </p>
                         </div>
                         <div class="mb-3">
                             <label for="foto-wisata" class="form-label">Ubah Foto</label>
-                            <input type="file" class="form-control form-control-md" id="foto-wisata" name="foto"/>
+                            <input type="file" class="form-control form-control-md" id="foto-wisata" name="foto" onchange="previewImage(this)"/>
                             @error('foto')
                             <div class="small text-danger fst-italic">
                                * {{ $message ?? '' }}
