@@ -25,45 +25,46 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        $alt = Alternative::where('status', 'accepted')->get();
-        $cri = Criteria::all();
-        $user = User::all();
-        return view('pages.dashboard.index', [
-            "title" => "Dashboard",
-            "menu" => "Dashboard",
-            "alt" => $alt,
-            "cri" => $cri,
-            "user" => $user,
-        ]);
+    Route::middleware('admin_or_pengelola')->group(function(){
+        Route::get('/dashboard', function () {
+            $alt = Alternative::where('status', 'accepted')->get();
+            $cri = Criteria::all();
+            $user = User::all();
+            return view('pages.dashboard.index', [
+                "title" => "Dashboard",
+                "menu" => "Dashboard",
+                "alt" => $alt,
+                "cri" => $cri,
+                "user" => $user,
+            ]);
+        });
+        // Alternative
+        Route::get('spk/destinasi/alternative/wisata', [AlternativeController::class, 'index'])->name('spk/destinasi/alternative.index');
+        Route::get('spk/destinasi/alternative/wisata/create', [AlternativeController::class, 'create'])->name('spk/destinasi/alternative.create');
+        Route::post('spk/destinasi/alternative/wisata/store', [AlternativeController::class, 'store'])->name('spk/destinasi/alternative.store');
     });
-    // Alternative
-    Route::get('spk/destinasi/alternative/wisata', [AlternativeController::class, 'index'])->name('spk/destinasi/alternative.index');
-    Route::get('spk/destinasi/alternative/wisata/create', [AlternativeController::class, 'create'])->name('spk/destinasi/alternative.create');
-    Route::post('spk/destinasi/alternative/wisata/store', [AlternativeController::class, 'store'])->name('spk/destinasi/alternative.store');
-    Route::get('spk/destinasi/alternative/wisata/show/{id}', [AlternativeController::class, 'show'])->name('spk/destinasi/alternative.show');
-    Route::get('spk/destinasi/alternative/wisata/edit/{id}', [AlternativeController::class, 'edit'])->name('spk/destinasi/alternative.edit');
-    Route::put('spk/destinasi/alternative/wisata/update/{id}', [AlternativeController::class, 'update'])->name('spk/destinasi/alternative.update');
-    Route::delete('spk/destinasi/alternative/wisata/destroy/{id}', [AlternativeController::class, 'destroy'])->name('spk/destinasi/alternative.destroy');
-    Route::put('spk/destinasi/alternative/wisata/confirm/{id}', [AlternativeController::class, 'confirm'])->name('spk/destinasi/alternative.confirm');
-
-    // Criteria
-    Route::get('spk/destinasi/kriteria/wisata', [CriteriaController::class, 'index'])->name('spk/destinasi/kriteria.index');
-    Route::get('spk/destinasi/kriteria/wisata/create', [CriteriaController::class, 'create'])->name('spk/destinasi/kriteria.create');
-    Route::post('spk/destinasi/kriteria/wisata/store', [CriteriaController::class, 'store'])->name('spk/destinasi/kriteria.store');
-    Route::get('spk/destinasi/kriteria/wisata/edit/{id}', [CriteriaController::class, 'edit'])->name('spk/destinasi/kriteria.edit');
-    Route::put('spk/destinasi/kriteria/wisata/update/{id}', [CriteriaController::class, 'update'])->name('spk/destinasi/kriteria.update');
-    Route::delete('spk/destinasi/kriteria/wisata/destroy/{id}', [CriteriaController::class, 'destroy'])->name('spk/destinasi/kriteria.destroy');
-    Route::put('spk/destinasi/kriteria/wisata/activated/{id}', [CriteriaController::class, 'activated'])->name('spk/destinasi/kriteria.activated');
-
-    // SubCriteria
-    Route::get('spk/destinasi/sub/kriteria/wisata/create/{id}', [SubCriteriaController::class, 'create'])->name('spk/destinasi/sub/kriteria.create');
-    Route::post('spk/destinasi/sub/kriteria/wisata/store/{id}', [SubCriteriaController::class, 'store'])->name('spk/destinasi/sub/kriteria.store');
-    Route::get('spk/destinasi/sub/kriteria/wisata/edit/{id}', [SubCriteriaController::class, 'edit'])->name('spk/destinasi/sub/kriteria.edit');
-    Route::put('spk/destinasi/sub/kriteria/wisata/update/{id}', [SubCriteriaController::class, 'update'])->name('spk/destinasi/sub/kriteria.update');
-    Route::delete('spk/destinasi/sub/kriteria/wisata/destroy/{id}', [SubCriteriaController::class, 'destroy'])->name('spk/destinasi/sub/kriteria.destroy');
-
     Route::middleware('admin')->group(function () {
+        // alternatif
+        Route::get('spk/destinasi/alternative/wisata/edit/{id}', [AlternativeController::class, 'edit'])->name('spk/destinasi/alternative.edit');
+        Route::put('spk/destinasi/alternative/wisata/update/{id}', [AlternativeController::class, 'update'])->name('spk/destinasi/alternative.update');
+        Route::delete('spk/destinasi/alternative/wisata/destroy/{id}', [AlternativeController::class, 'destroy'])->name('spk/destinasi/alternative.destroy');
+        Route::put('spk/destinasi/alternative/wisata/confirm/{id}', [AlternativeController::class, 'confirm'])->name('spk/destinasi/alternative.confirm');
+        // Criteria
+        Route::get('spk/destinasi/kriteria/wisata', [CriteriaController::class, 'index'])->name('spk/destinasi/kriteria.index');
+        Route::get('spk/destinasi/kriteria/wisata/create', [CriteriaController::class, 'create'])->name('spk/destinasi/kriteria.create');
+        Route::post('spk/destinasi/kriteria/wisata/store', [CriteriaController::class, 'store'])->name('spk/destinasi/kriteria.store');
+        Route::get('spk/destinasi/kriteria/wisata/edit/{id}', [CriteriaController::class, 'edit'])->name('spk/destinasi/kriteria.edit');
+        Route::put('spk/destinasi/kriteria/wisata/update/{id}', [CriteriaController::class, 'update'])->name('spk/destinasi/kriteria.update');
+        Route::delete('spk/destinasi/kriteria/wisata/destroy/{id}', [CriteriaController::class, 'destroy'])->name('spk/destinasi/kriteria.destroy');
+        Route::put('spk/destinasi/kriteria/wisata/activated/{id}', [CriteriaController::class, 'activated'])->name('spk/destinasi/kriteria.activated');
+    
+        // SubCriteria
+        Route::get('spk/destinasi/sub/kriteria/wisata/create/{id}', [SubCriteriaController::class, 'create'])->name('spk/destinasi/sub/kriteria.create');
+        Route::post('spk/destinasi/sub/kriteria/wisata/store/{id}', [SubCriteriaController::class, 'store'])->name('spk/destinasi/sub/kriteria.store');
+        Route::get('spk/destinasi/sub/kriteria/wisata/edit/{id}', [SubCriteriaController::class, 'edit'])->name('spk/destinasi/sub/kriteria.edit');
+        Route::put('spk/destinasi/sub/kriteria/wisata/update/{id}', [SubCriteriaController::class, 'update'])->name('spk/destinasi/sub/kriteria.update');
+        Route::delete('spk/destinasi/sub/kriteria/wisata/destroy/{id}', [SubCriteriaController::class, 'destroy'])->name('spk/destinasi/sub/kriteria.destroy');
+
         // Kategori Wisata
         Route::get('spk/destinasi/kategori/wisata/index', [TravelCategoryController::class, 'index'])->name('spk/destinasi/kategori/wisata.index');
         Route::get('spk/destinasi/kategori/wisata/create', [TravelCategoryController::class, 'create'])->name('spk/destinasi/kategori/wisata.create');
@@ -81,8 +82,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('spk/destinasi/user/destroy/{id}', [UserController::class, 'destroy'])->name('spk/destinasi/user.destroy');
     });
 });
-
-
 
     // customer page
     Route::get('/', function(){
@@ -108,4 +107,9 @@ Route::middleware('auth')->group(function () {
     //     return $request->all();
     // })->name('test.store');
 
+
 require __DIR__.'/auth.php';
+
+Route::fallback(function(){
+    return redirect()->route('landing.page')->with('error', 'Halaman tidak ditemukan');
+});

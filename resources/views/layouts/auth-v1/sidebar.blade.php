@@ -24,13 +24,29 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-
-        {{-- <li class="menu-header small text-uppercase">
-            <span class="menu-header-text text-white">Master</span>
+        {{-- <li class="menu-header small text-muted">
+            <span class="menu-header-text text-uppercase">Master Data</span>
         </li> --}}
-        <li class="menu-item {{ $menu == 'data' ? 'open' : '' }}">
+
+        @canany(['admin', 'pengelola'])
+        <li class="menu-item {{ $title === 'alternative' ? 'active' : '' }}">
+            <a href="{{ route('spk/destinasi/alternative.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-map-pin"></i>
+                <div data-i18n="Analytics">Destinasi Wisata</div>
+            </a>
+        </li>
+        @endcanany
+        @can('admin')            
+        <li class="menu-item {{ $title === 'kriteria' ? 'active' : '' }}">
+            <a href="{{ route('spk/destinasi/kriteria.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                <div data-i18n="Analytics">Kriteria AHP</div>
+            </a>
+        </li>
+        @endcan
+
+        {{-- <li class="menu-item {{ $menu == 'data' ? 'open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                {{-- <i class="menu-icon tf-icons bx bxs-cog"></i> --}}
                 <i class='menu-icon tf-icons bx bx-box'></i>
                 <div>Data AHP</div>
             </a>
@@ -40,23 +56,17 @@
                         <div>Alternatif Wisata</div>
                     </a>
                 </li>
+                @can('admin')
                 <li class="menu-item {{ $title == 'kriteria' ? 'active' : '' }}">
                     <a href="{{ route('spk/destinasi/kriteria.index') }}" class="menu-link">
                         <div>Kriteria</div>
                     </a>
                 </li>
-                {{-- <li class="menu-item {{ $title == 'penilaian' ? 'active' : '' }}">
-                    <a href="{{ route('spk/destinasi/penilaian.index') }}" class="menu-link">
-                        <div>Penilaian</div>
-                    </a>
-                </li> --}}
+                @endcan
             </ul>
-        </li>
+        </li> --}}
 
         @can('admin')      
-            <li class="menu-header small text-muted">
-                <span class="menu-header-text text-uppercase">Administrator</span>
-            </li>
             <li class="menu-item {{ $title === 'Kategori Wisata' ? 'active' : '' }}">
                 <a href="{{ route('spk/destinasi/kategori/wisata.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-category"></i>

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class isPengelola
+class isAdminOrPengelola
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,10 @@ class isPengelola
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role !== 'Pengelola') {
-            // abort(403);
-            return redirect('/dashboard')->with('error', 'Anda tidak mempunyai akses ke halaman ini');
+        if (Auth::user()->role === 'Administrator' || Auth::user()->role === 'Pengelola') {
+            return $next($request);
         }
-        return $next($request);
+        return redirect()->route('landing.page')->with('error', 'Anda tidak mempunyai akses ke halaman ini');
+        // abort(403);
     }
 }

@@ -17,8 +17,10 @@ class isAdmin
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::user()->role !== 'Administrator') {
-            abort(403);
+            // abort(403);
+            return redirect('/dashboard')->with('error', 'Anda tidak mempunyai akses ke halaman ini');
         }
+
         return $next($request);
     }
 }
