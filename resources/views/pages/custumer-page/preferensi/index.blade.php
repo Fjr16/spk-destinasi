@@ -114,8 +114,8 @@
                     jika pengguna telah login maka preferensi dikaitkan dengan akun pengguna, jika tidak maka preferensi hanya dapat digunakan pada sesi ini
                 </small>
             </div>
-            <form action="{{ route('test.store') }}" method="POST" id="quizForm">
-            @csrf
+            {{-- <form action="{{ route('test.store') }}" method="POST" id="quizForm"> --}}
+            <form method="POST" id="quizForm">
                 <div class="card position-relative p-4" style="background-color: rgba(255, 255, 255, 0.1)">
                     <div class="card-body">
                         <div id="quizContainer">

@@ -63,25 +63,25 @@ Route::middleware('auth')->group(function () {
     Route::put('spk/destinasi/sub/kriteria/wisata/update/{id}', [SubCriteriaController::class, 'update'])->name('spk/destinasi/sub/kriteria.update');
     Route::delete('spk/destinasi/sub/kriteria/wisata/destroy/{id}', [SubCriteriaController::class, 'destroy'])->name('spk/destinasi/sub/kriteria.destroy');
 
+    Route::middleware('admin')->group(function () {
+        // Kategori Wisata
+        Route::get('spk/destinasi/kategori/wisata/index', [TravelCategoryController::class, 'index'])->name('spk/destinasi/kategori/wisata.index');
+        Route::get('spk/destinasi/kategori/wisata/create', [TravelCategoryController::class, 'create'])->name('spk/destinasi/kategori/wisata.create');
+        Route::post('spk/destinasi/kategori/wisata/store', [TravelCategoryController::class, 'store'])->name('spk/destinasi/kategori/wisata.store');
+        Route::get('spk/destinasi/kategori/wisata/edit/{id}', [TravelCategoryController::class, 'edit'])->name('spk/destinasi/kategori/wisata.edit');
+        Route::put('spk/destinasi/kategori/wisata/update/{id}', [TravelCategoryController::class, 'update'])->name('spk/destinasi/kategori/wisata.update');
+        Route::delete('spk/destinasi/kategori/wisata/destroy/{id}', [TravelCategoryController::class, 'destroy'])->name('spk/destinasi/kategori/wisata.destroy');
+    
+        // User
+        Route::get('spk/destinasi/user/index', [UserController::class, 'index'])->name('spk/destinasi/user.index');
+        Route::get('spk/destinasi/user/create', [UserController::class, 'create'])->name('spk/destinasi/user.create');
+        Route::post('spk/destinasi/user/store', [UserController::class, 'store'])->name('spk/destinasi/user.store');
+        Route::get('spk/destinasi/user/edit/{id}', [UserController::class, 'edit'])->name('spk/destinasi/user.edit');
+        Route::put('spk/destinasi/user/update/{id}', [UserController::class, 'update'])->name('spk/destinasi/user.update');
+        Route::delete('spk/destinasi/user/destroy/{id}', [UserController::class, 'destroy'])->name('spk/destinasi/user.destroy');
+    });
 });
 
-Route::middleware('admin')->group(function () {
-    // Kategori Wisata
-    Route::get('spk/destinasi/kategori/wisata/index', [TravelCategoryController::class, 'index'])->name('spk/destinasi/kategori/wisata.index');
-    Route::get('spk/destinasi/kategori/wisata/create', [TravelCategoryController::class, 'create'])->name('spk/destinasi/kategori/wisata.create');
-    Route::post('spk/destinasi/kategori/wisata/store', [TravelCategoryController::class, 'store'])->name('spk/destinasi/kategori/wisata.store');
-    Route::get('spk/destinasi/kategori/wisata/edit/{id}', [TravelCategoryController::class, 'edit'])->name('spk/destinasi/kategori/wisata.edit');
-    Route::put('spk/destinasi/kategori/wisata/update/{id}', [TravelCategoryController::class, 'update'])->name('spk/destinasi/kategori/wisata.update');
-    Route::delete('spk/destinasi/kategori/wisata/destroy/{id}', [TravelCategoryController::class, 'destroy'])->name('spk/destinasi/kategori/wisata.destroy');
-
-    // User
-    Route::get('spk/destinasi/user/index', [UserController::class, 'index'])->name('spk/destinasi/user.index');
-    Route::get('spk/destinasi/user/create', [UserController::class, 'create'])->name('spk/destinasi/user.create');
-    Route::post('spk/destinasi/user/store', [UserController::class, 'store'])->name('spk/destinasi/user.store');
-    Route::get('spk/destinasi/user/edit/{id}', [UserController::class, 'edit'])->name('spk/destinasi/user.edit');
-    Route::put('spk/destinasi/user/update/{id}', [UserController::class, 'update'])->name('spk/destinasi/user.update');
-    Route::delete('spk/destinasi/user/destroy/{id}', [UserController::class, 'destroy'])->name('spk/destinasi/user.destroy');
-});
 
 
     // customer page

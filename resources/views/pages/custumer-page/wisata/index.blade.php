@@ -91,16 +91,19 @@
                         <p class="text-secondary small"><i class='bx bx-location-plus'></i>{{ $item->alamat ?? '' }}</p>
                         <p class="card-text">{{ Str::limit(($item->deskripsi ?? '-'), 100, '...') }}</p>
                     </div>
+                    <div class="card-footer">
+                      <a class="btn btn-sm btn-primary" href="{{ route('spk/destinasi/wisata.show', encrypt($item->id)) }}"><i class="bx bx-show"></i> Show more</a>
+                    </div>
                     </div>
                 </div>
                 @endforeach
             </div>
         @else
-        {{-- <div class="row">
+        <div class="row">
         <div class="col-md">
-            Tidak ada data
+            No Data Found
         </div>
-        </div> --}}
+        </div>
         @endif
     
     </div>

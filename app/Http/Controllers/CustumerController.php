@@ -161,7 +161,9 @@ class CustumerController extends Controller
         $cacheLockKey = 'proses_perhitungan_user_or_session_id_' . ($authId ?? $sess_id);
 
         try {
-            Cache::lock($cacheLockKey, 6)->block(4, function() use ($request, $authId, $sess_id){
+            $response = null;
+
+            Cache::lock($cacheLockKey, 6)->block(4, function() use ($request, $authId, $sess_id, &$response){
     
                 DB::beginTransaction();
                 $data = $request->all();
@@ -173,6 +175,8 @@ class CustumerController extends Controller
                 if ($isIncludeJarak) {
                     $request->validate([
                         'lokasi_user' => 'required',
+                    ],[
+                        'lokasi_user.required' => 'Pastikan lokasi keberangkatan telah dipilih'
                     ]);
                 }
     
@@ -226,77 +230,65 @@ class CustumerController extends Controller
     
                 if ($dataAlternatif->isEmpty()) {
                     DB::rollBack();
-                    return back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
-                }
-    
-                if ($isIncludeJarak && $request->lokasi_user) {
-                    // menghitung jarak pengguna dan objek wisata
-                    // latlon lokasi pengguna
-                    $lokasiPengguna = explode(',', $request->lokasi_user);
-                    $latPengguna = $lokasiPengguna[0] ?? 0;
-                    $lonPengguna = $lokasiPengguna[1] ?? 0;
-                    if (!$latPengguna || !$lonPengguna) {
-                        return back()->with('success', 'format lokasi keberangkatan tidak valid, format = latitude, longitude');
-                    }
+                    $response = back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
+                    return; 
                 }
     
                 $arrA=[];
                 $arrReal = [];
                 foreach ($dataAlternatif as $key => $alt) {
+                    $arrToPush = [];
+                    $nilaiReal = [];
+
                     if ($isIncludeJarak && $request->lokasi_user) {
+                        $lokasiPengguna = explode(',', $request->lokasi_user);
+                        $latPengguna = $lokasiPengguna[0] ?? 0;
+                        $lonPengguna = $lokasiPengguna[1] ?? 0;
+                        if (!$latPengguna || !$lonPengguna) {
+                            $response = back()->with('error', 'format lokasi keberangkatan tidak valid, format = latitude, longitude');
+                            return; 
+                        }
+
                         // lokasi wisata
                         $lokasiWisata = explode(',', $alt->maps_lokasi);
                         $latWisata = $lokasiWisata[0] ?? 0;
                         $lonWisata = $lokasiWisata[1] ?? 0;
     
                         if (!$latWisata || !$lonWisata) {
-                            return back()->with('success', 'Terjadi Kesalahan Saat menghitung jarak, mohon periksa data lokasi objek wisata, pastikan dengan format = latitude, longitude');
+                            $response = back()->with('error', 'Terjadi Kesalahan Saat menghitung jarak, mohon periksa data lokasi objek wisata, pastikan dengan format = latitude, longitude');
+                            return; 
                         }
     
                         $criteriaJarakTempuh = Criteria::where('name', 'Jarak Tempuh')->first();
-                    }
-    
-                    $arrToPush = [];
-                    $nilaiReal = [];
-                    foreach ($alt->performanceRatings as $index => $pr) {
-                        if ($isIncludeJarak && $request->lokasi_user && $index === 0) {
-                            // filterisasi jarak tempuh
-                            $operatorJarak = $request->operator_jarak;
-                            $valueJarak = $request->value_jarak;
-                            $jarak = $this->haversine($lokasiPengguna[0], $lokasiPengguna[1], $latWisata, $lonWisata);
-                            $bobotNormalisasiJarak = $this->getValueNormalJarak($jarak,$criteriaJarakTempuh);
-                            if ($valueJarak) {
-                                if ($operatorJarak === '=') {
-                                    if ($jarak == $valueJarak) {
-                                        $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $bobotNormalisasiJarak;
-                                        $nilaiReal[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $jarak;
-                                    }else{
-                                        continue;
-                                    }
-                                }elseif($operatorJarak === '>') {
-                                    if ($jarak > $valueJarak) {
-                                        $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $bobotNormalisasiJarak;
-                                        $nilaiReal[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $jarak;
-                                    }else{
-                                        continue;
-                                    }
-                                }elseif($operatorJarak === '<') {
-                                    if ($jarak < $valueJarak) {
-                                        $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $bobotNormalisasiJarak;
-                                        $nilaiReal[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $jarak;
-                                    }else{
-                                        continue;
-                                    }
-                                }
+
+
+                        // filterisasi jarak tempuh
+                        $operatorJarak = $request->operator_jarak;
+                        $valueJarak = $request->value_jarak;
+                        $jarak = $this->haversine($lokasiPengguna[0], $lokasiPengguna[1], $latWisata, $lonWisata);
+                        $bobotNormalisasiJarak = $this->getValueNormalJarak($jarak,$criteriaJarakTempuh);
+                        if ($valueJarak) {
+                            if (
+                                ($operatorJarak === '=' && $jarak != $valueJarak) ||
+                                ($operatorJarak === '<' && $jarak >= $valueJarak) ||
+                                ($operatorJarak === '>' && $jarak <= $valueJarak)
+                            ) {
+                                continue;
                             }else{
                                 $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $bobotNormalisasiJarak;
                                 $nilaiReal[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $jarak;
                             }
-    
+                        }else{
+                            $arrToPush[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $bobotNormalisasiJarak;
+                            $nilaiReal[strtolower(str_replace(' ', '', $criteriaJarakTempuh->id))] = $jarak;
                         }
+                    }
+    
+                    foreach ($alt->performanceRatings as $pr) {
                         $arrToPush[strtolower(str_replace(' ', '', $pr->criteria->id))] = $this->normalisasiBobotSubCriteria($pr->criteria, $pr->subCriteria->bobot);
                         $nilaiReal[strtolower(str_replace(' ', '', $pr->criteria->id))] = $pr->subCriteria->bobot;
                     }
+
                     $collToPush = collect($arrToPush);
                     if (!$collToPush->isEmpty()) {
                         $collToPush->put('alternative_id', $alt->id);
@@ -311,7 +303,8 @@ class CustumerController extends Controller
                 $arrA = collect($arrA);
                 if ($arrA->isEmpty()) {
                     DB::rollBack();
-                    return back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
+                    $response = back()->with('error', 'Maaf, Tidak Ada Alternatif Yang Sesuai dengan Kriteria Anda');
+                    return;
                 }
     
                 $ahp = new AnalyticalHierarchyProcess;
@@ -359,11 +352,12 @@ class CustumerController extends Controller
                 Cache::put($cacheKey2, $arrA, now()->addMinutes(20));
     
                 DB::commit();
+                $response = redirect()->route('spk/destinasi/rekomendasi.result');
             });
             
             
             // \Log::info("end rekomendasi", ['time' => now()]);
-            return redirect()->route('spk/destinasi/rekomendasi.result');
+            return $response ?? back()->with('error', 'Terjadi Kesalahan, Tidak ada data rekomendasi yang ditemukan');
         } catch (\Throwable $e) {
             // \Log::info("end rekomendasi", ['time' => now()]);
             DB::rollBack();
