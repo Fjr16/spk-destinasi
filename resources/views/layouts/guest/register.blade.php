@@ -69,6 +69,11 @@
                                     <div class="form-group">
                                         <button type="submit" class="form-control btn btn-primary submit px-3">Sign Up</button>
                                     </div>
+                                    <div class="text-center">
+                                        <a href="{{ route('login') }}" style="color: black; text-decoration:underline;">
+                                            Already has an account ? login here !
+                                        </a>
+                                    </div>
                                 </form>
                             </div>
                         </div>
