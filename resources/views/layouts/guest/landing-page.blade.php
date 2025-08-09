@@ -142,7 +142,7 @@
                             <a class="nav-link mx-lg-2 {{ Route::is('landing.page') ? 'active' : '' }}" aria-current="page" href="{{ route('landing.page') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 {{ Route::is('destinasi/wisata.index') ? 'active' : '' }}" href="{{ route('destinasi/wisata.index') }}">Destinasi Wisata</a>
+                            <a class="nav-link mx-lg-2 {{ Route::is('spk/destinasi/wisata.*') ? 'active' : '' }}" href="{{ route('spk/destinasi/wisata.index') }}">Destinasi Wisata</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 {{ Route::is('preferensi.*') ? 'active' : '' }}" href="{{ route('preferensi.rekomendasi') }}">Preferensi</a>
@@ -216,6 +216,10 @@
         });
 
         function onMapClick(e) {
+             // Cek jika input readonly
+            if ($('#maps-lokasi').prop('readonly')) {
+                return; // hentikan fungsi jika readonly
+            }
             if (tempMarker) {
                 map.removeLayer(tempMarker)
             }
@@ -225,6 +229,7 @@
             var currentLatLang = e.latlng.lat + ', ' + e.latlng.lng;
 
             $('#maps-lokasi').val(currentLatLang);
+            // $('#link-maps').attr('href', 'https://www.google.com/maps?q='+currentLatLang);
         }
 
         map.on('click', onMapClick);
