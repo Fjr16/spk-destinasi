@@ -130,7 +130,7 @@
     {{-- <nav class="navbar navbar-expand-lg fixed-top"> --}}
     <nav class="navbar navbar-expand-lg {{ Route::is('landing.page') ? 'fixed-top' : '' }}">
         <div class="container">
-            <a class="navbar-brand me-auto" href="{{ route('landing.page') }}">Logo</a>
+            <a class="navbar-brand me-auto" href="{{ route('landing.page') }}">SPK AHP</a>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Logo</h5>

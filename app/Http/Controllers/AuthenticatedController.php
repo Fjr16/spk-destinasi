@@ -38,7 +38,11 @@ class AuthenticatedController extends Controller
         }
         
         $request->session()->regenerate();
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if (Auth::user()->role === 'Pengguna') {
+            return redirect()->route('landing.page');
+        }else{
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
     }
     public function registerStore(Request $request){
         try {

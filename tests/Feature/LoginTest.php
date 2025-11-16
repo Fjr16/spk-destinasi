@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
-    /**
+    /**php artisan test --filter LoginTestphp 
      * A basic feature test example.
      */
 
