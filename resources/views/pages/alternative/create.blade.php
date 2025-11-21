@@ -1,12 +1,58 @@
 @extends('layouts.auth-v1.main')
 
+@push('page_css')
+<style>
+     .gallery-box {
+        width: 140px;
+        height: 140px;
+        border: 2px dashed #c3c3c3;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+        background: #f8f9fa;
+        position: relative;
+    }
+    .gallery-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .plus-icon {
+        font-size: 32px;
+    }
+    .file-input {
+        display: none;
+    }
+    .delete-btn {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        background: red;
+    }
+</style>
+@endpush
 @section('content')
     <div class="card">
         <div class="card-header mb-4 border-bottom">
             <h4 class="m-0 p-0">Tambah Alternatif Wisata</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('spk/destinasi/alternative.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('spk/destinasi/alternative.store') }}" method="POST" enctype="multipart/form-data" id="alternativeForm">
             @csrf
                 <h5 class="card-title text-white p-2 bg-info rounded-top ps-3">Detail Alternatif Wisata</h5>
                 <div class="card-text mb-4 border-bottom">
@@ -52,7 +98,7 @@
                                 <textarea name="deskripsi" class="form-control form-control-md" id="deskripsi-wisata" cols="30" rows="6" placeholder="Deskripsi tentang objek wisata" required>{{ old('deskripsi') }}</textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="foto-wisata" class="form-label">Foto</label>
+                                <label for="foto-wisata" class="form-label">Foto Utama</label>
                                 <input type="file" class="form-control form-control-md" id="foto-wisata" name="foto" onchange="previewImage(this)"/>
                                 <img id="preview-image" src="" alt="" class="img-fluid mt-4" width="250" height="250" style="display: none;">
                                 {{-- preview image --}}
@@ -62,6 +108,21 @@
                                 </div>
                                 @enderror
                             </div>
+                        </div>
+                        <div class="col-md-12 mb-3 mt-4 p-4 border border-1 border-info rounded bg-label-secondary">
+                            {{-- foto multiple input --}}
+                            <h5 class="text-white p-2 bg-secondary rounded-top ps-3">Foto Lainnya</h5>
+
+                            <div id="gallery-wrapper" class="d-flex flex-wrap gap-3 justify-content-center">
+                                <!-- Kotak kosong pertama -->
+                                <div class="gallery-box empty-box shadow-sm" onclick="triggerEmptyBox()">
+                                    <span class="text-muted plus-icon">+</span>
+                                    <input type="file" class="file-input" accept="image/*" multiple onchange="handleMultipleUpload(event)">
+                                </div>
+                            </div>
+
+                            <input type="file" id="other_image_input" name="other_images[]" multiple hidden>
+                            {{-- foto multiple input --}}
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
@@ -87,7 +148,8 @@
                                 <select class="form-select form-control" id="sub-criteria-{{ $item->id }}" aria-label="Default select example" name="sub_criteria_id[]" required>
                                     <option selected disabled>-- Pilih --</option>
                                     @foreach ($item->subCriterias as $key => $opt)
-                                        <option value="{{ $opt->id }}" {{ old('sub_criteria_id') ? (old('sub_criteria_id')[$index] == $opt->id ? 'selected' : '') : '' }}>{{ $opt->label ?? '-' }}</option>
+                                        {{-- <option value="{{ $opt->id }}" {{ !empty(old('sub_criteria_id')) ? (old('sub_criteria_id')[$index] == $opt->id ? 'selected' : '') : '' }}>{{ $opt->label ?? '-' }}</option> --}}
+                                        <option value="{{ $opt->id }}" {{ old('sub_criteria_id.'.$index) == $opt->id ? 'selected' : '' }}>{{ $opt->label ?? '-' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -104,3 +166,86 @@
         </div>
     </div>
 @endsection
+@push('script_page')
+    <script>
+        let galleryFiles = []; // menampung semua File gambar
+
+        function triggerEmptyBox() {
+            document.querySelector(".empty-box .file-input").click();
+        }
+
+        function handleMultipleUpload(event) {
+            const files = Array.from(event.target.files);
+
+            files.forEach(file => {
+                if (file.type.startsWith("image/")) {
+                    const isValidImage = validationImage(file);
+                    if (isValidImage.status) {
+                        galleryFiles.push(file);
+                    }else{
+                        notif.error(isValidImage.msg);
+                    }
+                }else{
+                    notif.error('File yang dipilih harus gambar (jpg/png)');
+                }
+            });
+
+            redrawGallery();
+        }
+
+        function redrawGallery() {
+            const wrapper = document.getElementById("gallery-wrapper");
+            wrapper.innerHTML = ""; // reset
+
+            // render semua gambar yang sudah dipilih
+            galleryFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const box = document.createElement("div");
+                    box.classList.add("gallery-box", "shadow-sm");
+
+                    box.innerHTML = `
+                        <img src="${e.target.result}">
+                        <button class="delete-btn" onclick="removeImage(${index})">×</button>
+                    `;
+
+                    wrapper.appendChild(box);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Tambahkan kotak kosong 1x saja
+            const emptyBox = document.createElement("div");
+            emptyBox.classList.add("gallery-box", "empty-box", "shadow-sm");
+            emptyBox.setAttribute("onclick", "triggerEmptyBox()");
+            emptyBox.innerHTML = `
+                <span class="text-muted plus-icon">+</span>
+                <input type="file" class="file-input" accept="image/*" multiple onchange="handleMultipleUpload(event)">
+            `;
+
+            wrapper.appendChild(emptyBox);
+        }
+
+        function removeImage(index) {
+            galleryFiles.splice(index, 1);
+            redrawGallery();
+        }
+
+
+        // inject foto ketika submit form
+        const form = document.getElementById('alternativeForm');
+        const inputFileImages = document.getElementById('other_image_input');
+
+        form.addEventListener('submit', function(e){
+            const data = new DataTransfer();
+
+            galleryFiles.forEach((file, index) => {
+                if(file){
+                    data.items.add(file);
+                }
+            });
+
+            inputFileImages.files = data.files;
+        });
+    </script>
+@endpush

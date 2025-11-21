@@ -111,6 +111,8 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('/assets/js/config.js') }}"></script>
+
+    @stack('page_css');
 </head>
 
 <body>
@@ -357,7 +359,31 @@
             }
 
         }
+
+        function validationImage(file){
+            const allowedSize = 2 * 1024 * 1024;
+            const allowedTypes = ['image/jpeg', 'image/png'];
+
+            if (!allowedTypes.includes(file.type)) {
+                return {
+                    status:false,
+                    msg:'Gambar yang diterima hanya .jpg atau .png'
+                };
+            }
+            if (file.size > allowedSize) {
+                return {
+                    status: false,
+                    msg: 'Maksimal ukuran gambar adalah 2 MB'
+                };
+            }
+
+            return {
+                status: true,
+                msg: 'Gambar valid'
+            };
+        }
     </script>
+    @stack('script_page')
 
     @yield('script')
 

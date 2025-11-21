@@ -210,7 +210,14 @@
             if (loc) {
                 L.marker([loc[0], loc[1]])
                 .addTo(map)
-                .bindPopup(`Koordinat lokasi LatLng(${loc[0]}, ${loc[1]})`).
+                .bindPopup(`
+                    Koordinat lokasi LatLng(${loc[0]}, ${loc[1]}) <br>
+                    <a href="https://www.google.com/maps?q=${loc[0]},${loc[1]}" 
+                        target="_blank" 
+                        class="btn btn-primary btn-sm text-white">
+                            Buka di Google Maps
+                    </a>
+                    `).
                 openPopup();
             }
         });

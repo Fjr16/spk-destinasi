@@ -29,4 +29,7 @@ class Alternative extends Model
     public function performanceRatings(){
         return $this->hasMany(PerformanceRating::class);
     }
+    public function alternativeImages(){
+        return $this->hasMany(AlternativeImage::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alternative;
+use App\Models\AlternativeImage;
 use App\Models\Criteria;
 use App\Models\PerformanceRating;
 use App\Models\TravelCategory;
@@ -64,6 +65,8 @@ class AlternativeController extends Controller
             'criteria_id.*' => 'required|exists:criterias,id',
             'sub_criteria_id' => 'required|array', 
             'sub_criteria_id.*' => 'required|exists:sub_criterias,id', 
+            'other_images'   => 'nullable|array',
+            'other_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ],[
             'criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
             'criteria_id.*.exists' => 'kriteria penilaian tidak ditemukan',
@@ -89,6 +92,21 @@ class AlternativeController extends Controller
                 $instance->criteria_id = $criId;
                 $instance->sub_criteria_id = $data['sub_criteria_id'][$key];
                 $instance->save();
+            }
+
+            if ($request->hasFile('other_images')) {
+                foreach ($request->file('other_images') as $file) {
+                    if ($file && $file->isValid()) {
+                        $storedPath = $file->store('other_images', 'public');
+                        $originalName = $file->getClientOriginalName();
+
+                        $altImages = new AlternativeImage;
+                        $altImages->alternative_id = $item->id;
+                        $altImages->img_name = $originalName;
+                        $altImages->img_path = $storedPath;
+                        $altImages->save();
+                    }
+                }
             }
     
             DB::commit();
