@@ -267,5 +267,6 @@
             notyf.error("{{ session('error') ?? session('errors') }}");
         @endif
     </script>
+    @stack('scripts')
   </body>
 </html>

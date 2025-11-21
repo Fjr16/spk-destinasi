@@ -313,7 +313,7 @@ class CustumerController extends Controller
                 // menghitung skor akhir destinasi wisata / alternatif
                 $result = [];
                 foreach ($arrA as $key => $item) {
-                    $wisata = Alternative::where('id', $item['alternative_id'])->first();
+                    $wisata = Alternative::with('alternativeImages')->where('id', $item['alternative_id'])->first();
     
                     $listSkorAlternatifCn = [];
                     foreach ($dataPerbandinganCriteria as $comp) {
@@ -393,52 +393,53 @@ class CustumerController extends Controller
             return redirect()->route('spk/destinasi/rekomendasi.create');
         }
 
-        $dataComparison = Auth::check() 
-        ? CriteriaComparison::where('user_id', Auth::user()->id)->get()
-        : CriteriaComparison::where('session_id', session()->getId())->get();
-        $kriterias = $dataComparison->pluck('criteriaFirst.name')
-                    ->merge($dataComparison->pluck('criteriaSecond.name'))
-                    ->unique()
-                    ->values();
+        
+        // $dataComparison = Auth::check() 
+        // ? CriteriaComparison::where('user_id', Auth::user()->id)->get()
+        // : CriteriaComparison::where('session_id', session()->getId())->get();
+        // $kriterias = $dataComparison->pluck('criteriaFirst.name')
+        //             ->merge($dataComparison->pluck('criteriaSecond.name'))
+        //             ->unique()
+        //             ->values();
 
-        $matriks = $this->buildViewMatriks($dataComparison, $kriterias);
-        $matriksNormalisasi = $this->buildViewMatriks($dataComparison, $kriterias, 'normalisasi');
+        // $matriks = $this->buildViewMatriks($dataComparison, $kriterias);
+        // $matriksNormalisasi = $this->buildViewMatriks($dataComparison, $kriterias, 'normalisasi');
 
-        $criteriaTotals = CriteriaWeight::with('criteria')
-        ->whereIn('criteria_id', function ($query){
-            $query->select('criteria_id_first')
-                ->from('criteria_comparisons');
-            if (Auth::check()) {
-                $query->where('user_id', Auth::user()->id);
-            }else{
-                $query->where('session_id', session()->getId());
-            }
-        })->get()
-        ->keyBy(fn ($item) => $item->criteria->name);
+        // $criteriaTotals = CriteriaWeight::with('criteria')
+        // ->whereIn('criteria_id', function ($query){
+        //     $query->select('criteria_id_first')
+        //         ->from('criteria_comparisons');
+        //     if (Auth::check()) {
+        //         $query->where('user_id', Auth::user()->id);
+        //     }else{
+        //         $query->where('session_id', session()->getId());
+        //     }
+        // })->get()
+        // ->keyBy(fn ($item) => $item->criteria->name);
 
-        $mappedAlternatif = $dataAlternatifNormal->map(function ($item) {
-            $alt = Alternative::find($item['alternative_id']);
-            $result = ['Nama Alternatif' => $alt->name];
+        // $mappedAlternatif = $dataAlternatifNormal->map(function ($item) {
+        //     $alt = Alternative::find($item['alternative_id']);
+        //     $result = ['Nama Alternatif' => $alt->name];
             
-            foreach ($item as $key => $value) {
-                if ($key !== 'alternative_id') {
-                    $criteria = Criteria::find($key);
-                    $result[$criteria->name] = $value;
-                }
-            }
-            return $result;
-        });
+        //     foreach ($item as $key => $value) {
+        //         if ($key !== 'alternative_id') {
+        //             $criteria = Criteria::find($key);
+        //             $result[$criteria->name] = $value;
+        //         }
+        //     }
+        //     return $result;
+        // });
 
         return view('pages.custumer-page.decision.show', [
             'title' => 'Rekomendasi',
             'menu' => 'Rekomendasi',
             'data' => $data,
-            'dataComparison' => $dataComparison,
-            'kriterias' => $kriterias,
-            'matriks' => $matriks,
-            'matriksNormalisasi' => $matriksNormalisasi,
-            'criteriaTotals' => $criteriaTotals,
-            'mappedAlternatif' => $mappedAlternatif,
+            // 'dataComparison' => $dataComparison,
+            // 'kriterias' => $kriterias,
+            // 'matriks' => $matriks,
+            // 'matriksNormalisasi' => $matriksNormalisasi,
+            // 'criteriaTotals' => $criteriaTotals,
+            // 'mappedAlternatif' => $mappedAlternatif,
         ]);
     }
 

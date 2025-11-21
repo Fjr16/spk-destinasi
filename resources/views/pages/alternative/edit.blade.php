@@ -1,12 +1,58 @@
 @extends('layouts.auth-v1.main')
 
+@push('page_css')
+<style>
+     .gallery-box {
+        width: 140px;
+        height: 140px;
+        border: 2px dashed #c3c3c3;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+        background: #f8f9fa;
+        position: relative;
+    }
+    .gallery-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .plus-icon {
+        font-size: 32px;
+    }
+    .file-input {
+        display: none;
+    }
+    .delete-btn {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        background: rgba(0,0,0,0.6);
+        color: #fff;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .delete-btn:hover {
+        background: red;
+    }
+</style>
+@endpush
 @section('content')
 <div class="card">
     <div class="card-header mb-4 border-bottom">
         <h4 class="m-0 p-0">Edit Alternatif Wisata</h4>
     </div>
     <div class="card-body">
-        <form action="{{ route('spk/destinasi/alternative.update', encrypt($item->id)) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('spk/destinasi/alternative.update', encrypt($item->id)) }}" method="POST" id="alternativeForm" enctype="multipart/form-data">
             @method('PUT')
             @csrf
             <h5 class="card-title text-white p-2 bg-info rounded-top ps-3">
@@ -70,6 +116,17 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-12 mb-3 mt-4 p-4 border border-1 border-info rounded bg-label-secondary">
+                        {{-- foto multiple input --}}
+                        <h5 class="text-white p-2 bg-secondary rounded-top ps-3">Foto Lainnya</h5>
+
+                        <div id="gallery-wrapper" class="d-flex flex-wrap gap-3 justify-content-center"></div>
+
+                        <input type="file" id="other_image_input" name="other_images[]" multiple hidden>
+                        {{-- penampung id foto lama yang dihapus --}}
+                        <div id="deleted-images-container"></div>
+                        {{-- foto multiple input --}}
+                    </div>
                     <div class="col-md-12">
                         <div class="mb-3">
                             <label for="maps-lokasi" class="form-label">
@@ -117,3 +174,138 @@
     </div>
 </div>
 @endsection
+@push('script_page')
+    <script>
+        // === DATA DARI SERVER: foto lain yang sudah tersimpan ===
+        // asumsikan relasi: $alternative->otherImages (id, path)
+        let existingGallery = @json(
+            $item->alternativeImages->map(function ($img) {
+                return [
+                    'id'  => $img->id,
+                    'url' => Storage::url($img->img_path),
+                ];
+            })
+        );
+
+        // tandai mana yang dihapus (deleted = true)
+        existingGallery = existingGallery.map(img => ({
+            ...img,
+            deleted: false,
+        }));
+
+        let galleryFiles = []; // menampung semua File gambar
+
+        function triggerEmptyBox() {
+            document.querySelector(".empty-box .file-input").click();
+        }
+
+        function handleMultipleUpload(event) {
+            const files = Array.from(event.target.files);
+
+            files.forEach(file => {
+                if (file.type.startsWith("image/")) {
+                    const isValidImage = validationImage(file);
+                    if (isValidImage.status) {
+                        galleryFiles.push(file);
+                    }else{
+                        notif.error(isValidImage.msg);
+                    }
+                }else{
+                    notif.error('File yang dipilih harus gambar (jpg/png)');
+                }
+            });
+
+            redrawGallery();
+        }
+
+        function redrawGallery() {
+            const wrapper = document.getElementById("gallery-wrapper");
+            wrapper.innerHTML = ""; // reset
+
+            // Tambahkan kotak kosong 1x saja
+            const emptyBox = document.createElement("div");
+            emptyBox.classList.add("gallery-box", "empty-box", "shadow-sm");
+            emptyBox.setAttribute("onclick", "triggerEmptyBox()");
+            emptyBox.innerHTML = `
+                <span class="text-muted plus-icon">+</span>
+                <input type="file" class="file-input" accept="image/*" multiple onchange="handleMultipleUpload(event)">
+            `;
+            wrapper.appendChild(emptyBox);
+
+            // 1) Render FOTO LAMA (yang belum dihapus)
+            existingGallery.forEach((img, index) => {
+                if (img.deleted) return;
+
+                const box = document.createElement("div");
+                box.classList.add("gallery-box", "shadow-sm");
+
+                box.innerHTML = `
+                    <img src="${img.url}">
+                    <button type="button"
+                            class="delete-btn"
+                            onclick="removeExistingImage(${index})">×</button>
+                `;
+
+                wrapper.appendChild(box);
+            });
+
+            //2) render semua gambar yang sudah dipilih
+            galleryFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const box = document.createElement("div");
+                    box.classList.add("gallery-box", "shadow-sm");
+
+                    box.innerHTML = `
+                        <img src="${e.target.result}">
+                        <button class="delete-btn" onclick="removeImage(${index})">×</button>
+                    `;
+
+                    wrapper.appendChild(box);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function removeExistingImage(index) {
+            const img = existingGallery[index];
+            if (!img) return;
+
+            img.deleted = true;
+
+            const container = document.getElementById('deleted-images-container');
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'deleted_other_images[]';
+            input.value = img.id;
+            container.appendChild(input);
+
+            redrawGallery();
+        }
+        function removeImage(index) {
+            galleryFiles.splice(index, 1);
+            redrawGallery();
+        }
+
+
+        // inject foto ketika submit form
+        const form = document.getElementById('alternativeForm');
+        const inputFileImages = document.getElementById('other_image_input');
+
+        form.addEventListener('submit', function(e){
+            const data = new DataTransfer();
+
+            galleryFiles.forEach((file, index) => {
+                if(file){
+                    data.items.add(file);
+                }
+            });
+
+            inputFileImages.files = data.files;
+        });
+
+        $(document).ready(function(){
+            redrawGallery();
+        });
+    </script>
+@endpush

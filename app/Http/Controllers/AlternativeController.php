@@ -166,6 +166,10 @@ class AlternativeController extends Controller
             'criteria_id.*' => 'required|exists:criterias,id',
             'sub_criteria_id' => 'required|array', 
             'sub_criteria_id.*' => 'required|exists:sub_criterias,id', 
+            'other_images'   => 'nullable|array',
+            'other_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'deleted_other_images'   => 'nullable|array',
+            'deleted_other_images.*' => 'exists:alternative_images,id',
         ],[
             'criteria_id.required' => 'Form Penilaian alternatif wisata wajib diisi',
             'criteria_id.*.exists' => 'kriteria penilaian tidak ditemukan',
@@ -201,6 +205,32 @@ class AlternativeController extends Controller
                 $instance->sub_criteria_id = $data['sub_criteria_id'][$key];
                 $instance->save();
             }
+
+            // menghapus gambar yang ditandai untuk dihapus
+            if ($request->filled('deleted_other_images') && is_array($request->deleted_other_images)) {
+                $deletedImages = AlternativeImage::whereIn('id', $request->deleted_other_images)->get();
+                foreach ($deletedImages as $delImg) {
+                    if (!empty($delImg->img_path) && Storage::disk('public')->exists($delImg->img_path)) {
+                        Storage::disk('public')->delete($delImg->img_path);
+                    }
+                    $delImg->delete();
+                }
+            }
+            // menyimpan gambar baru
+            if ($request->hasFile('other_images')) {
+                foreach ($request->file('other_images') as $file) {
+                    if ($file && $file->isValid()) {
+                        $storedPath = $file->store('other_images', 'public');
+                        $originalName = $file->getClientOriginalName();
+
+                        $altImages = new AlternativeImage;
+                        $altImages->alternative_id = $item->id;
+                        $altImages->img_name = $originalName;
+                        $altImages->img_path = $storedPath;
+                        $altImages->save();
+                    }
+                }
+            }
     
             DB::commit();
             return redirect()->route('spk/destinasi/alternative.index')->with('success', 'Berhasil Diperbarui');
@@ -221,6 +251,12 @@ class AlternativeController extends Controller
         $item = Alternative::find(decrypt($id));
 
         Storage::delete('public/' . $item->foto);
+        if( $item->alternativeImages->isNotEmpty() ){
+            foreach ($item->alternativeImages as $altImg) {
+                Storage::delete('public/' . $altImg->img_path);
+                $altImg->delete();
+            }
+        }
         $item->delete();
 
         return back()->with('success', 'Berhasil Dihapus');
