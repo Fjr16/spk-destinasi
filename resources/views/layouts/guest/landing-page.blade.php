@@ -101,7 +101,8 @@
     /* ========================= */
     .hero-section {
         position: relative;
-        background: url('/assets/img/bg-old.jpg') no-repeat center center;
+        /* background: url('/assets/img/bg-new.jpeg') no-repeat center center; */
+        background: url('/assets/img/bg-new.jpeg') no-repeat center center;
         background-size: cover;
         width: 100%;
         min-height: 100vh;

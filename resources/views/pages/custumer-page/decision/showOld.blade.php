@@ -4,7 +4,7 @@
 @push('page-css')
     <style>
       body {
-        background: url('/assets/img/bg-old.jpg') no-repeat center center fixed;
+        background: url('/assets/img/bg-new.jpeg') no-repeat center center fixed;
         background-size: cover;
         color: white;
       }
