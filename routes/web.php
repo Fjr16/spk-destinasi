@@ -96,6 +96,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiIndex'])->name('preferensi.rekomendasi');
     Route::post('/spk/destinasi/preferensi/rekomendasi', [CustumerController::class, 'preferensiStore'])->name('preferensi.store');
 
+    Route::get('spk/destinasi/panduan/index', [CustumerController::class, 'panduanIndex'])->name('spk/destinasi/panduan.index');
+
     // Route::get('/test', function(){
     //     $ahp = new AnalyticalHierarchyProcess;
     //     $res =  $ahp->generateQuestions();

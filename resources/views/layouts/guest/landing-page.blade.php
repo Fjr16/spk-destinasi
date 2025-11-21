@@ -139,7 +139,7 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-center flex-grow-1 pe-3">
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 {{ Route::is('landing.page') ? 'active' : '' }}" aria-current="page" href="{{ route('landing.page') }}">Home</a>
+                            <a class="nav-link mx-lg-2 {{ Route::is('landing.page') ? 'active' : '' }}" aria-current="page" href="{{ route('landing.page') }}">Beranda</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 {{ Route::is('spk/destinasi/wisata.*') ? 'active' : '' }}" href="{{ route('spk/destinasi/wisata.index') }}">Destinasi Wisata</a>
@@ -149,6 +149,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 {{ Route::is('spk/destinasi/rekomendasi.*') ? 'active' : '' }}" href="{{ route('spk/destinasi/rekomendasi.create') }}">Rekomendasi</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 {{ Route::is('spk/destinasi/panduan.*') ? 'active' : '' }}" href="{{ route('spk/destinasi/panduan.index') }}">Panduan Aplikasi</a>
                         </li>
                     </ul>
                 </div>

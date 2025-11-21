@@ -623,4 +623,11 @@ class CustumerController extends Controller
         }
         return $matriksAuto;
     }
+
+    public function panduanIndex()
+    {
+        return view('pages.custumer-page.panduan.index', [
+            'title' => 'Panduan Aplikasi',
+        ]);
+    }
 }
